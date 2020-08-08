@@ -7,9 +7,12 @@ import io.bullet.borer.derivation.MapBasedCodecs
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class OIDCConfig(jwks_uri: String)
+case class OIDCConfig(jwks_uri: String, issuer: String)
 case class Key(e: String, n: String, kty: String, kid: String)
 case class KeySet(keys: List[Key])
+object KeySet {
+  val empty: KeySet = KeySet(Nil)
+}
 
 class OIDCClient(wellKnownUrl: String, httpCMaybe: Option[HttpClient] = None)(
     implicit system: ClassicActorSystemProvider
@@ -23,7 +26,7 @@ class OIDCClient(wellKnownUrl: String, httpCMaybe: Option[HttpClient] = None)(
 
   private val httpC = httpCMaybe.getOrElse(new HttpClient)
 
-  lazy private val fetchOIDCConfig: Future[OIDCConfig] =
+  lazy val fetchOIDCConfig: Future[OIDCConfig] =
     httpC.get[OIDCConfig](wellKnownUrl)
 
   def fetchKeys: Future[KeySet] =

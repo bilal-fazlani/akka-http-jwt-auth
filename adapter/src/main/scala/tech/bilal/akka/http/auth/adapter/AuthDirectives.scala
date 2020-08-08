@@ -11,7 +11,7 @@ import io.bullet.borer.Decoder
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthDirectives[T: Decoder](
-    authentication: SyncAuthenticatorFactory[T],
+    authentication: AsyncAuthenticatorFactory[T],
     realm: String
 )(implicit
     ec: ExecutionContext
@@ -24,5 +24,5 @@ class AuthDirectives[T: Decoder](
   def asyncPolicy(policy: T => Future[Boolean]): Directive0 =
     token.flatMap(t => akkaAuthAsync(policy(t)))
 
-  def token: Directive1[T] = authenticateOAuth2(realm, auth)
+  def token: Directive1[T] = authenticateOAuth2Async(realm, auth)
 }

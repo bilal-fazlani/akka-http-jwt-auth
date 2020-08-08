@@ -9,6 +9,7 @@ import akka.util.Timeout
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
+import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
 class PublicKeyManager(
@@ -18,12 +19,38 @@ class PublicKeyManager(
     actorSystem: ActorSystem[Command]
 ) {
 
-  sealed trait PublicKeyMessage
-  private case class GetKeys(replyTo: ActorRef[KeySet]) extends PublicKeyMessage
+  private sealed trait PublicKeyMessage
+  private case class GetKey(kid: String, replyTo: ActorRef[Option[Key]])
+      extends PublicKeyMessage
   private case class SetKeys(keys: KeySet) extends PublicKeyMessage
   private case object FetchKeys extends PublicKeyMessage
 
-  object PublicKeyManagerActor {
+  private case class State(map: Map[String, Key])
+  private object State {
+    def apply(keys: KeySet): State =
+      new State(keys.keys.map(k => (k.kid, k)).toMap)
+  }
+
+  private implicit val timeout: Timeout = Timeout(5.seconds)
+  private implicit val sch: typed.Scheduler = actorSystem.scheduler
+
+  import actorSystem.executionContext
+
+  private val actorRefF: Future[ActorRef[PublicKeyMessage]] =
+    actorSystem ? (Spawn[PublicKeyMessage](
+      PublicKeyManagerActor.init,
+      "PublicKeyManagerActor",
+      Props.empty,
+      _
+    ))
+
+  def getKey(kid: String): Future[Option[Key]] =
+    for {
+      ar <- actorRefF
+      key <- ar ? (GetKey(kid, _))
+    } yield key
+
+  private object PublicKeyManagerActor {
     def init: Behavior[PublicKeyMessage] =
       Behaviors.setup[PublicKeyMessage](ctx =>
         Behaviors.withStash[PublicKeyMessage](1024) { st =>
@@ -35,7 +62,9 @@ class PublicKeyManager(
           Behaviors.receiveMessage[PublicKeyMessage] {
             case SetKeys(keys) =>
               println(s"init: set: $keys")
-              st.unstashAll(beh(keys))
+              st.unstashAll {
+                beh(State(keys))
+              }
             case x =>
               println(s"init: stash: $x")
               st.stash(x)
@@ -44,53 +73,31 @@ class PublicKeyManager(
         }
       )
 
-    def beh(
-        keys: KeySet = KeySet(Nil)
-    ): Behavior[PublicKeyMessage] = {
+    def beh(state: State): Behavior[PublicKeyMessage] = {
       Behaviors.setup(ctx =>
         Behaviors.withTimers[PublicKeyMessage] { timer =>
           timer.startTimerWithFixedDelay(FetchKeys, keyRefreshInterval)
           Behaviors.receiveMessage {
-            case GetKeys(replyTo) =>
-              println(s"beh: get $keys")
-              replyTo ! keys
+            case GetKey(kid, replyTo) =>
+              println(s"beh: get kid $kid from $state")
+              replyTo ! state.map.get(kid)
               Behaviors.same
             case SetKeys(keys) =>
-              println(s"beh: set $keys")
-              beh(keys)
+              println(s"beh: set keys ${state.map}")
+              beh(State(keys))
             case FetchKeys =>
               println(s"beh: fetch new")
-              ctx.pipeToSelf(oidcClient.fetchKeys) {
-                case Success(value) =>
-                  SetKeys(value)
-                case Failure(exception) =>
-                  println("WARNING: could not refresh keys")
-                  exception.printStackTrace()
-                  SetKeys(keys)
-              }
+              import ctx.executionContext
+              oidcClient.fetchKeys
+                .map(keys => ctx.self ! SetKeys(keys))
+                .recover {
+                  case NonFatal(_) =>
+                    println("WARNING: could not refresh keys")
+                }
               Behaviors.same
           }
         }
       )
     }
-
-    implicit val timeout: Timeout = Timeout(5.seconds)
-    implicit val sch: typed.Scheduler = actorSystem.scheduler
-
-    import actorSystem.executionContext
-
-    private val actorRefF: Future[ActorRef[PublicKeyMessage]] =
-      actorSystem ? (Spawn[PublicKeyMessage](
-        PublicKeyManagerActor.init,
-        "PublicKeyManagerActor",
-        Props.empty,
-        _
-      ))
-
-    def getKeys: Future[KeySet] =
-      for {
-        ar <- actorRefF
-        keys <- ar ? GetKeys
-      } yield keys
   }
 }

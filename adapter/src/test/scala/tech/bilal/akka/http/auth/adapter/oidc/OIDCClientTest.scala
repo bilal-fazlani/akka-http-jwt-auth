@@ -1,6 +1,5 @@
 package tech.bilal.akka.http.auth.adapter.oidc
 
-import akka.actor.ClassicActorSystemProvider
 import munit.FunSuite
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -1,31 +1,36 @@
 package example
 
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.Behaviors
-import akka.http.auth.adapter.borer._
+import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.bullet.borer.Decoder
 import io.bullet.borer.derivation.MapBasedCodecs
+import tech.bilal.akka.http.auth.adapter.oidc.{OIDCClient, PublicKeyManager}
 import tech.bilal.akka.http.auth.adapter.{
+  AsyncAuthenticatorFactory,
   AuthDirectives,
-  JwtVerifier,
-  SyncAuthenticatorFactory
+  JwtVerifier
 }
+
+import scala.concurrent.duration.DurationInt
 
 object Main extends App {
   val port = 9876
-  implicit val actorSystem: ActorSystem[Nothing] =
-    ActorSystem(Behaviors.empty, "main")
+  implicit val actorSystem: ActorSystem[SpawnProtocol.Command] =
+    ActorSystem(SpawnProtocol(), "main")
 
   import actorSystem.executionContext
 
   case class AT(name: String, role: String)
   implicit val dec: Decoder[AT] = MapBasedCodecs.deriveDecoder[AT]
+  val authUrl =
+    s"http://localhost:8081/auth/realms/master/.well-known/openid-configuration"
   val sec =
     new AuthDirectives[AT](
-      new SyncAuthenticatorFactory[AT](new JwtVerifier),
+      new AsyncAuthenticatorFactory[AT](
+        new JwtVerifier(new PublicKeyManager(new OIDCClient(authUrl), 24.hours))
+      ),
       "master"
     )
 
