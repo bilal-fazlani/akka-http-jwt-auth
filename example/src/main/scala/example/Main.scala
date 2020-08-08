@@ -2,38 +2,45 @@ package example
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
-import akka.http.auth.adapter.borer.decoderFor
+import akka.http.auth.adapter.borer._
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives.{complete, get}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import tech.bilal.akka.http.auth.adapter.AuthorizationPolicy.CustomPolicy
+import io.bullet.borer.Decoder
+import io.bullet.borer.derivation.MapBasedCodecs
 import tech.bilal.akka.http.auth.adapter.{
-  SecurityDirectives,
-  SyncAuthenticatorFactory,
-  TokenDecoder
+  AuthDirectives,
+  JwtVerifier,
+  SyncAuthenticatorFactory
 }
 
 object Main extends App {
   val port = 9876
-  implicit val actorSystem = ActorSystem(Behaviors.empty, "main")
+  implicit val actorSystem: ActorSystem[Nothing] =
+    ActorSystem(Behaviors.empty, "main")
 
   import actorSystem.executionContext
 
-  val routes: Route = get {
-    complete("OK")
-  }
-
   case class AT(name: String, role: String)
-  implicit val atDecoder: TokenDecoder[AT] = decoderFor[AT]
+  implicit val dec: Decoder[AT] = MapBasedCodecs.deriveDecoder[AT]
   val sec =
-    new SecurityDirectives[AT](new SyncAuthenticatorFactory[AT], "master")
+    new AuthDirectives[AT](
+      new SyncAuthenticatorFactory[AT](new JwtVerifier),
+      "master"
+    )
 
   import sec._
 
-  val admin = sGet(CustomPolicy(_.role.toLowerCase == "admin"))
+  val adminPolicy = policy(_.role.toLowerCase == "admin")
 
-  val routes2 = admin { t =>
-    complete(s"OK: $t")
+  val routes: Route = get {
+    path("secure") {
+      adminPolicy {
+        complete("Safe OK")
+      }
+    } ~ pathEndOrSingleSlash {
+      complete("OK")
+    }
   }
 
   Http()

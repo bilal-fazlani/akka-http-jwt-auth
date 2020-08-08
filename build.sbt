@@ -1,7 +1,9 @@
 inThisBuild(
   Seq(
     version := "0.1.0",
-    scalaVersion := "2.13.3"
+    scalaVersion := "2.13.3",
+    resolvers += "jitpack" at "https://jitpack.io",
+    testFrameworks += new TestFramework("munit.Framework")
   )
 )
 
@@ -17,8 +19,16 @@ lazy val adapter = project
   .settings(
     name := "akka-http-auth-adapter",
     libraryDependencies ++= Seq(
+      Libs.`akka-actor-typed`,
+      Libs.`akka-stream`,
       Libs.`akka-http`,
-      Libs.`akka-stream`
+      Libs.`jwt-core`,
+//      Libs.`scala-uri`,
+      Libs.`borer-core`,
+      Libs.`borer-derivation`,
+      Libs.`borer-akka`,
+      TestLibs.munit % Test,
+      TestLibs.`embedded-keycloak` % Test
     )
   )
 

@@ -1,3 +1,5 @@
-GET http://localhost:9876
+GET http://localhost:9876/secure
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkJpbGFsIEZhemxhbmkiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1MTYyMzkwMjJ9.0dQSTT6dnVVYwgu8a-0oWqU2VIMqrXHDHwAtcXZsuIM
 
 ###
+
