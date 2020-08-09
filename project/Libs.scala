@@ -9,7 +9,6 @@ object Libs {
   lazy val `borer-derivation` = "io.bullet" %% "borer-derivation" % "1.6.1"
   lazy val `borer-akka` = "io.bullet" %% "borer-compat-akka" % "1.6.1"
   lazy val `jwt-core` = "com.pauldijou" %% "jwt-core" % "4.2.0"
-  lazy val `scala-uri` = "io.lemonlabs" %% "scala-uri" % "2.2.4"
 }
 
 object TestLibs {

@@ -26,10 +26,11 @@ object Main extends App {
   implicit val dec: Decoder[AT] = MapBasedCodecs.deriveDecoder[AT]
   val authUrl =
     s"http://localhost:8081/auth/realms/master/.well-known/openid-configuration"
+  private val oIDCClient = new OIDCClient(authUrl)
   val sec =
     new AuthDirectives[AT](
       new AsyncAuthenticatorFactory[AT](
-        new JwtVerifier(new PublicKeyManager(new OIDCClient(authUrl), 24.hours))
+        new JwtVerifier(oIDCClient, new PublicKeyManager(oIDCClient, 24.hours))
       ),
       "master"
     )

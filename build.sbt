@@ -23,7 +23,6 @@ lazy val adapter = project
       Libs.`akka-stream`,
       Libs.`akka-http`,
       Libs.`jwt-core`,
-//      Libs.`scala-uri`,
       Libs.`borer-core`,
       Libs.`borer-derivation`,
       Libs.`borer-akka`,
