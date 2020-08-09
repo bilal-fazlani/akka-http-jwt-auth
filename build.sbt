@@ -3,6 +3,7 @@ inThisBuild(
     version := "0.1.0",
     scalaVersion := "2.13.3",
     resolvers += "jitpack" at "https://jitpack.io",
+    Test / parallelExecution := false,
     testFrameworks += new TestFramework("munit.Framework")
   )
 )
