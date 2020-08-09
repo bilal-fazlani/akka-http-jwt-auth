@@ -10,11 +10,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
 
-//todo:
-// create public key
-// validate token using public key
-// parse token into Option[T]
-// issuer check
 class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager) {
   def verifyAndDecode[T: Decoder](tokenString: String): Future[Option[T]] = {
     val jwtOptions =
