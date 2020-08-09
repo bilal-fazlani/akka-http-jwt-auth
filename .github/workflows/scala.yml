@@ -15,6 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/cache@v2
       with:
+        key: ${{ runner.os }}-scala
         path: | 
           ~/.ivy2/cache
           ~/.sbt
