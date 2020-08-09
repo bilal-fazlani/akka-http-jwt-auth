@@ -13,9 +13,9 @@ lazy val root = project
   .settings(
     name := "root"
   )
-  .aggregate(adapter, example)
+  .aggregate(`akka-http-jwt-auth`, example)
 
-lazy val adapter = project
+lazy val `akka-http-jwt-auth` = project
   .in(file("./akka-http-jwt-auth"))
   .settings(
     name := "akka-http-jwt-auth",
@@ -42,4 +42,4 @@ lazy val example = project
       TestLibs.`embedded-keycloak`
     )
   )
-  .dependsOn(adapter)
+  .dependsOn(`akka-http-jwt-auth`)

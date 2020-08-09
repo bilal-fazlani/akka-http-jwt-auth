@@ -25,4 +25,4 @@ jobs:
       with:
         java-version: 11
     - name: Run tests
-      run: sbt ";project adapter; test"
+      run: sbt ";project akka-http-jwt-auth; test"
