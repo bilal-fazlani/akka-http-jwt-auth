@@ -22,10 +22,10 @@ object Main extends App {
 
   import actorSystem.executionContext
 
-  case class AT(name: String, role: String)
+  case class AT(preferred_username: String)
   implicit val dec: Decoder[AT] = MapBasedCodecs.deriveDecoder[AT]
   val authUrl =
-    s"http://localhost:8081/auth/realms/master/.well-known/openid-configuration"
+    s"http://localhost:8080/auth/realms/master/.well-known/openid-configuration"
   private val oIDCClient = new OIDCClient(authUrl)
   val sec =
     new AuthDirectives[AT](
@@ -37,7 +37,7 @@ object Main extends App {
 
   import sec._
 
-  val adminPolicy = policy(_.role.toLowerCase == "admin")
+  val adminPolicy = policy(_.preferred_username == "admin")
 
   val routes: Route = get {
     path("secure") {

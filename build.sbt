@@ -10,14 +10,14 @@ inThisBuild(
 lazy val root = project
   .in(file("."))
   .settings(
-    name := "akka-http-auth"
+    name := "root"
   )
-  .aggregate(adapter, borer, keycloak, example)
+  .aggregate(adapter, example)
 
 lazy val adapter = project
-  .in(file("./adapter"))
+  .in(file("./akka-http-jwt-auth"))
   .settings(
-    name := "akka-http-auth-adapter",
+    name := "akka-http-jwt-auth",
     libraryDependencies ++= Seq(
       Libs.`akka-actor-typed`,
       Libs.`akka-stream`,
@@ -31,32 +31,14 @@ lazy val adapter = project
     )
   )
 
-lazy val borer = project
-  .in(file("./borer"))
-  .settings(
-    name := "akka-http-auth-adapter-borer",
-    libraryDependencies ++= Seq(
-      Libs.`borer-core`,
-      Libs.`borer-derivation`
-    )
-  )
-  .dependsOn(adapter)
-
-lazy val keycloak = project
-  .in(file("./keycloak"))
-  .settings(
-    name := "akka-http-auth-adapter-keycloak",
-    libraryDependencies ++= Seq(
-    )
-  )
-
 lazy val example = project
   .in(file("./example"))
   .settings(
-    name := "akka-http-auth-example",
+    name := "example",
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
-      Libs.`akka-actor-typed`
+      Libs.`akka-actor-typed`,
+      TestLibs.`embedded-keycloak`
     )
   )
-  .dependsOn(adapter, borer, keycloak)
+  .dependsOn(adapter)
