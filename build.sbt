@@ -57,6 +57,7 @@ lazy val example = project
   .in(file("./example"))
   .settings(
     name := "example",
+    skip in publish := true,
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`akka-actor-typed`,
