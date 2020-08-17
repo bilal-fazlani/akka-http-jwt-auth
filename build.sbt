@@ -1,8 +1,29 @@
 inThisBuild(
   Seq(
-    version := "0.1.0",
     scalaVersion := "2.13.3",
     resolvers += "jitpack" at "https://jitpack.io",
+    organization := "tech.bilal",
+    homepage := Some(
+      url("https://github.com/bilal-fazlani/akka-http-jwt-auth")
+    ),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/bilal-fazlani/akka-http-jwt-auth"),
+        "git@github.com:bilal-fazlani/akka-http-jwt-auth.git"
+      )
+    ),
+    developers := List(
+      Developer(
+        "bilal-fazlani",
+        "Bilal Fazlani",
+        "bilal.m.fazlani@gmail.com",
+        url("https://bilal-fazlani.com")
+      )
+    ),
+    licenses += ("MIT", url(
+      "https://github.com/bilal-fazlani/akka-http-jwt-auth/blob/master/LICENSE"
+    )),
+    crossPaths := true,
     Test / parallelExecution := false,
     testFrameworks += new TestFramework("munit.Framework")
   )
