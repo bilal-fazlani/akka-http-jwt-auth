@@ -8,7 +8,7 @@ object Libs {
   lazy val `borer-core` = "io.bullet" %% "borer-core" % "1.6.1"
   lazy val `borer-derivation` = "io.bullet" %% "borer-derivation" % "1.6.1"
   lazy val `borer-akka` = "io.bullet" %% "borer-compat-akka" % "1.6.1"
-  lazy val `jwt-core` = "com.pauldijou" %% "jwt-core" % "4.2.0"
+  lazy val `jwt-core` = "com.pauldijou" %% "jwt-core" % "4.3.0"
 }
 
 object TestLibs {
