@@ -39,7 +39,7 @@ lazy val `akka-http-jwt-auth-root` = project
 lazy val `akka-http-jwt-auth-models` = project
   .in(file("./akka-http-jwt-auth-models"))
   .settings(
-    name := "akka-http-jwt-auth",
+    name := "akka-http-jwt-auth-models",
     libraryDependencies ++= Seq(
       Libs.`borer-core`,
       Libs.`borer-derivation`
