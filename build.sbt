@@ -29,10 +29,10 @@ inThisBuild(
   )
 )
 
-lazy val root = project
+lazy val `akka-http-jwt-auth-root` = project
   .in(file("."))
   .settings(
-    name := "root"
+    name := "akka-http-jwt-auth-root"
   )
   .aggregate(`akka-http-jwt-auth`, example)
 
