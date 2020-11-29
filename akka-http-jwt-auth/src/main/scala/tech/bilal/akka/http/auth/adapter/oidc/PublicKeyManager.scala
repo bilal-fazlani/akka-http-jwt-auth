@@ -6,6 +6,7 @@ import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
 import akka.util.Timeout
+import tech.bilal.akka.http.auth.adapter.models.{Key, KeySet}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{DurationInt, FiniteDuration}

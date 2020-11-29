@@ -36,6 +36,16 @@ lazy val `akka-http-jwt-auth-root` = project
   )
   .aggregate(`akka-http-jwt-auth`, example)
 
+lazy val `akka-http-jwt-auth-models` = project
+  .in(file("./akka-http-jwt-auth-models"))
+  .settings(
+    name := "akka-http-jwt-auth",
+    libraryDependencies ++= Seq(
+      Libs.`borer-core`,
+      Libs.`borer-derivation`
+    )
+  )
+
 lazy val `akka-http-jwt-auth` = project
   .in(file("./akka-http-jwt-auth"))
   .settings(
@@ -52,6 +62,7 @@ lazy val `akka-http-jwt-auth` = project
       TestLibs.`embedded-keycloak` % Test
     )
   )
+  .dependsOn(`akka-http-jwt-auth-models`)
 
 lazy val example = project
   .in(file("./example"))
