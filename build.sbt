@@ -34,7 +34,7 @@ lazy val `akka-http-jwt-auth-root` = project
   .settings(
     name := "akka-http-jwt-auth-root"
   )
-  .aggregate(`akka-http-jwt-auth`, example)
+  .aggregate(`akka-http-jwt-auth`, `akka-http-jwt-auth-models`, example)
 
 lazy val `akka-http-jwt-auth-models` = project
   .in(file("./akka-http-jwt-auth-models"))
