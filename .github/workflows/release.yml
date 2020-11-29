@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-    branches: [master, dotty]
-    tags: ["*"]
+    branches: [release]
+    tags: ["v*"]
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,7 +14,6 @@ jobs:
           path: |
             ~/.ivy2/cache
             ~/.sbt
-            ~/embedded-keycloak/
       - uses: olafurpg/setup-scala@v10
       - uses: olafurpg/setup-gpg@v3
       - name: Publish ${{ github.ref }}
