@@ -1,7 +1,6 @@
 inThisBuild(
   Seq(
     scalaVersion := "3.0.0-M2",
-    crossScalaVersions := Seq("2.13.3", "3.0.0-M2"),
     resolvers += "jitpack" at "https://jitpack.io",
     organization := "tech.bilal",
     homepage := Some(
