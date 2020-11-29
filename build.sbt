@@ -1,6 +1,7 @@
 inThisBuild(
   Seq(
-    scalaVersion := "2.13.3",
+    scalaVersion := "3.0.0-M2",
+    crossScalaVersions := Seq("2.13.3", "3.0.0-M2"),
     resolvers += "jitpack" at "https://jitpack.io",
     organization := "tech.bilal",
     homepage := Some(
@@ -34,16 +35,19 @@ lazy val `akka-http-jwt-auth-root` = project
   .settings(
     name := "akka-http-jwt-auth-root"
   )
-  .aggregate(`akka-http-jwt-auth`, `akka-http-jwt-auth-models`, example)
+  .aggregate(`akka-http-jwt-auth`, `akka-http-oidc-client`, example)
 
-lazy val `akka-http-jwt-auth-models` = project
-  .in(file("./akka-http-jwt-auth-models"))
+lazy val `akka-http-oidc-client` = project
+  .in(file("./akka-http-oidc-client"))
   .settings(
-    name := "akka-http-jwt-auth-models",
+    name := "akka-http-oidc-client",
     libraryDependencies ++= Seq(
+      Libs.`akka-actor-typed`,
+      Libs.`akka-http`,
+      Libs.`akka-stream`,
       Libs.`borer-core`,
-      Libs.`borer-derivation`
-    )
+      Libs.`borer-akka`
+    ).map(_.withDottyCompat(scalaVersion.value))
   )
 
 lazy val `akka-http-jwt-auth` = project
@@ -51,18 +55,14 @@ lazy val `akka-http-jwt-auth` = project
   .settings(
     name := "akka-http-jwt-auth",
     libraryDependencies ++= Seq(
-      Libs.`akka-actor-typed`,
-      Libs.`akka-stream`,
       Libs.`akka-http`,
       Libs.`jwt-core`,
       Libs.`borer-core`,
-      Libs.`borer-derivation`,
-      Libs.`borer-akka`,
       TestLibs.munit % Test,
       TestLibs.`embedded-keycloak` % Test
-    )
+    ).map(_.withDottyCompat(scalaVersion.value))
   )
-  .dependsOn(`akka-http-jwt-auth-models`)
+  .dependsOn(`akka-http-oidc-client`)
 
 lazy val example = project
   .in(file("./example"))
@@ -73,6 +73,6 @@ lazy val example = project
       Libs.`akka-http`,
       Libs.`akka-actor-typed`,
       TestLibs.`embedded-keycloak`
-    )
+    ).map(_.withDottyCompat(scalaVersion.value))
   )
   .dependsOn(`akka-http-jwt-auth`)

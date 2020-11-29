@@ -1,4 +1,4 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.oidc.client
 
 import akka.actor.ClassicActorSystemProvider
 import akka.http.scaladsl.Http

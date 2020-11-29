@@ -1,12 +1,12 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.oidc.client
 
-import akka.actor.typed
 import akka.actor.typed.SpawnProtocol.{Command, Spawn}
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
+import akka.actor.typed._
+import akka.pattern.AskSupport
 import akka.util.Timeout
-import tech.bilal.akka.http.auth.adapter.models.{Key, KeySet}
+import tech.bilal.akka.http.oidc.client.models.{Key, KeySet}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -32,8 +32,8 @@ class PublicKeyManager(
       new State(keys.keys.map(k => (k.kid, k)).toMap)
   }
 
-  private implicit val timeout: Timeout = Timeout(5.seconds)
-  private implicit val sch: typed.Scheduler = actorSystem.scheduler
+  private given Timeout(5.seconds)
+  private given akka.actor.typed.Scheduler = actorSystem.scheduler
 
   import actorSystem.executionContext
 
@@ -48,7 +48,7 @@ class PublicKeyManager(
   def getKey(kid: String): Future[Option[Key]] =
     for {
       ar <- actorRefF
-      key <- ar ? (GetKey(kid, _))
+      key <- ar.ask[Option[Key]](x => GetKey(kid, x))
     } yield key
 
   private object PublicKeyManagerActor {

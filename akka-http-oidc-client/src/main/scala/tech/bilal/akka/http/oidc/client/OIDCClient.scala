@@ -1,9 +1,8 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.oidc.client
 
 import akka.actor.ClassicActorSystemProvider
 import io.bullet.borer.Decoder
-import io.bullet.borer.derivation.MapBasedCodecs
-import tech.bilal.akka.http.auth.adapter.models.{KeySet, OIDCConfig}
+import tech.bilal.akka.http.oidc.client.models._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

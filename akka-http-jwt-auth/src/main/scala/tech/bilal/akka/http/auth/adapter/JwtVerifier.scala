@@ -3,8 +3,8 @@ package tech.bilal.akka.http.auth.adapter
 import io.bullet.borer.{Decoder, Json}
 import pdi.jwt.{Jwt, JwtOptions}
 import tech.bilal.akka.http.auth.adapter.crypto.Algorithm
-import tech.bilal.akka.http.auth.adapter.models.JWTHeader
-import tech.bilal.akka.http.auth.adapter.oidc.{OIDCClient, PublicKeyManager}
+import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
+import tech.bilal.akka.http.oidc.client.models.JWTHeader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

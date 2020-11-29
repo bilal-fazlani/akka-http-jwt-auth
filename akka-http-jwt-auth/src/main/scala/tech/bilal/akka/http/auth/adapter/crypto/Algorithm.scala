@@ -4,7 +4,7 @@ import java.math.BigInteger
 import java.security.spec.RSAPublicKeySpec
 import java.security.{KeyFactory, PublicKey}
 import java.util.Base64
-import tech.bilal.akka.http.auth.adapter.models.{JWTHeader, Key}
+import tech.bilal.akka.http.oidc.client.models._
 
 import scala.util.{Failure, Success, Try}
 
