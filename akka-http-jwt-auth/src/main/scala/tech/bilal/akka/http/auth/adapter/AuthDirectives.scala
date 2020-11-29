@@ -13,7 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthDirectives[T: Decoder](
     authentication: AsyncAuthenticatorFactory[T],
     realm: String
-)(implicit
+)(using
     ec: ExecutionContext
 ) {
   private val auth = authentication.make

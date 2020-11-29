@@ -10,9 +10,9 @@ import io.bullet.borer.compat.AkkaHttpCompat
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class HttpClient(implicit system: ClassicActorSystemProvider)
+class HttpClient(using system: ClassicActorSystemProvider)
     extends AkkaHttpCompat {
-  def get[O: Decoder](url: String)(implicit ec: ExecutionContext): Future[O] = {
+  def get[O: Decoder](url: String)(using ec: ExecutionContext): Future[O] = {
     val unmarshaller =
       borerUnmarshaller[O](jsonMediaType = MediaTypes.`application/json`)
     Http()

@@ -8,9 +8,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class OIDCClient(wellKnownUrl: String, httpCMaybe: Option[HttpClient] = None)(
-    implicit system: ClassicActorSystemProvider
+    using system: ClassicActorSystemProvider
 ) {
-  private val httpC = httpCMaybe.getOrElse(new HttpClient)
+  private lazy val httpC = httpCMaybe.getOrElse(new HttpClient)
 
   lazy val fetchOIDCConfig: Future[OIDCConfig] =
     httpC.get[OIDCConfig](wellKnownUrl)

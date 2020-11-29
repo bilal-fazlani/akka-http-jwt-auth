@@ -16,9 +16,7 @@ import scala.util.{Failure, Success}
 class PublicKeyManager(
     oidcClient: OIDCClient,
     keyRefreshInterval: FiniteDuration
-)(implicit
-    actorSystem: ActorSystem[Command]
-) {
+)(using actorSystem: ActorSystem[Command]) {
 
   private sealed trait PublicKeyMessage
   private case class GetKey(kid: String, replyTo: ActorRef[Option[Key]])
