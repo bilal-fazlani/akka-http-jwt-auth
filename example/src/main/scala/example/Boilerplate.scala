@@ -2,7 +2,7 @@ package example
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import io.bullet.borer.Decoder
-import tech.bilal.akka.http.auth.adapter.{AsyncAuthenticatorFactory, AuthDirectives, JwtVerifier}
+import tech.bilal.akka.http.auth.adapter.{AsyncAuthenticatorFactory, AuthConfig, AuthDirectives, JwtVerifier}
 import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
 
 import scala.concurrent.ExecutionContext
@@ -25,7 +25,7 @@ trait Boilerplate {
   val authDirectives =
     AuthDirectives[AT](
       AsyncAuthenticatorFactory[AT](
-        JwtVerifier(oIDCClient, PublicKeyManager(oIDCClient, 24.hours))
+        JwtVerifier(oIDCClient, PublicKeyManager(oIDCClient, 24.hours), AuthConfig(Set("RSA")))
       ),
       "master"
     )

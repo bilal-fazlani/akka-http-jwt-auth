@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
 
-class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager) {
+class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager, authConfig: AuthConfig) {
   def verifyAndDecode[T: Decoder](tokenString: String): Future[Option[T]] = {
     val jwtOptions =
       JwtOptions(signature = true, expiration = true, notBefore = true)
@@ -24,13 +24,12 @@ class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager) {
         )
       )
       issuer <- oidcClient.fetchOIDCConfig.map(_.issuer)
-      publicKey <- Future.fromTry(
-        Algorithm("RSA").flatMap(_.publicKey(key, header))
-        //todo: should we default to RSA?
-      )
+      algo = authConfig.supportedAlgorithms.find(_.toLowerCase == header.alg.toLowerCase)
+        .map(Algorithm.apply)
+        .getOrElse(throw RuntimeException(s"unsupported algorithm - ${header.alg}"))
+      publicKey <- Future.fromTry(algo.flatMap(_.publicKey(key, header)))
       _ = Jwt.validate(tokenString, publicKey, jwtOptions)
-      token <-
-        Future.fromTry(Json.decode(jsonPayloadContents.getBytes).to[T].valueTry)
+      token <- Future.fromTry(Json.decode(jsonPayloadContents.getBytes).to[T].valueTry)
     } yield Some(token)
   }
 
