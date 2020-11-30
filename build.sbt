@@ -32,6 +32,7 @@ inThisBuild(
 lazy val `akka-http-jwt-auth-root` = project
   .in(file("."))
   .settings(
+    skip in publish := true,
     name := "akka-http-jwt-auth-root"
   )
   .aggregate(`akka-http-jwt-auth`, `akka-http-oidc-client`, example)
