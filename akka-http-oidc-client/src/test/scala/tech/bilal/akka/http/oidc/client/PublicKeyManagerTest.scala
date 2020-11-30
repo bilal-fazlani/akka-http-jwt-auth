@@ -1,13 +1,12 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.oidc.client
 
-import java.util.Base64
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import io.bullet.borer.Json
-import munit.FunSuite
 import org.tmt.embedded_keycloak.utils.BearerToken
-import tech.bilal.akka.http.auth.adapter.AuthConfig
 import tech.bilal.akka.http.oidc.client.models._
 import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
+import munit.FunSuite
+import java.util.Base64
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 

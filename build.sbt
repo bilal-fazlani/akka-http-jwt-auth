@@ -46,8 +46,11 @@ lazy val `akka-http-oidc-client` = project
       Libs.`akka-http`,
       Libs.`akka-stream`,
       Libs.`borer-core`,
-      Libs.`borer-akka`
-    ).map(_.withDottyCompat(scalaVersion.value))
+      Libs.`borer-akka`,
+      TestLibs.`embedded-keycloak` % Test
+    ).map(_.withDottyCompat(scalaVersion.value))++ Seq(
+      TestLibs.munit % Test
+    )
   )
 
 lazy val `akka-http-jwt-auth` = project

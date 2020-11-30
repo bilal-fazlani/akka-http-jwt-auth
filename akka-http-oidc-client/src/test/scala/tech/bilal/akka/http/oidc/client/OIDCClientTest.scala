@@ -1,8 +1,8 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.oidc.client
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import munit.FunSuite
 import tech.bilal.akka.http.oidc.client.OIDCClient
+import munit.FunSuite
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class OIDCClientTest extends FunSuite with Fixtures {

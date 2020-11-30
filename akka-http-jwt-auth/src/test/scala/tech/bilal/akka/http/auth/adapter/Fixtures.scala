@@ -1,4 +1,4 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.auth.adapter
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.actor.typed.SpawnProtocol.Command

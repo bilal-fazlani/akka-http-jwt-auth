@@ -1,4 +1,4 @@
-package tech.bilal.akka.http.auth.adapter.oidc
+package tech.bilal.akka.http.auth.adapter
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import io.bullet.borer.Decoder
@@ -11,7 +11,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
 class JwtVerifierTest extends FunSuite with Fixtures {
-
+  
   private val fixture = FunFixture.map2(keycloak, actorSystem())
 
   private case class TestToken(
@@ -32,7 +32,7 @@ class JwtVerifierTest extends FunSuite with Fixtures {
       println(BearerToken.fromServer(settings.port, "admin", "admin"))
       val manager =  PublicKeyManager(client, 10.seconds)
       val verifier =  JwtVerifier(client, manager, AuthConfig(
-        s"localhost:${settings.port}",
+        s"http://localhost:${settings.port}/auth/realms/master",
         Set("RSA")
       ))
       val token = BearerToken.fromServer(settings.port, "admin", "admin")

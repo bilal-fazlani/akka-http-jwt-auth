@@ -10,7 +10,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
 
-class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager, authConfig: AuthConfig) {
+class JwtVerifier(
+    oidcClient: OIDCClient,
+    publicKeyManager: PublicKeyManager,
+    authConfig: AuthConfig
+) {
   def verifyAndDecode[T: Decoder](tokenString: String): Future[Option[T]] = {
     val jwtOptions =
       JwtOptions(signature = true, expiration = true, notBefore = true)
@@ -24,14 +28,19 @@ class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager, au
         )
       )
       issuer <- oidcClient.fetchOIDCConfig.map(_.issuer)
-      _ = if(issuer != authConfig.issuer)
+      _ = if (issuer != authConfig.issuer)
         throw RuntimeException("invalid token issuer")
-      algo = authConfig.supportedAlgorithms.find(_.toLowerCase == header.alg.toLowerCase)
-        .map(Algorithm.apply)
-        .getOrElse(throw RuntimeException(s"unsupported algorithm - ${header.alg}"))
+      algo =
+        authConfig.supportedAlgorithms
+          .find(_.toLowerCase == header.alg.toLowerCase)
+          .map(Algorithm.apply)
+          .getOrElse(
+            throw RuntimeException(s"unsupported algorithm - ${header.alg}")
+          )
       publicKey <- Future.fromTry(algo.flatMap(_.publicKey(key, header)))
       _ = Jwt.validate(tokenString, publicKey, jwtOptions)
-      token <- Future.fromTry(Json.decode(jsonPayloadContents.getBytes).to[T].valueTry)
+      token <-
+        Future.fromTry(Json.decode(jsonPayloadContents.getBytes).to[T].valueTry)
     } yield Some(token)
   }
 
