@@ -25,7 +25,7 @@ inThisBuild(
     )),
     crossPaths := true,
     Test / parallelExecution := false,
-    testFrameworks +=  TestFramework("munit.Framework")
+    testFrameworks += TestFramework("munit.Framework")
   )
 )
 
@@ -57,9 +57,10 @@ lazy val `akka-http-jwt-auth` = project
       Libs.`akka-http`,
       Libs.`jwt-core`,
       Libs.`borer-core`,
-      TestLibs.munit % Test,
       TestLibs.`embedded-keycloak` % Test
-    ).map(_.withDottyCompat(scalaVersion.value))
+    ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
+      TestLibs.munit % Test
+    )
   )
   .dependsOn(`akka-http-oidc-client`)
 
