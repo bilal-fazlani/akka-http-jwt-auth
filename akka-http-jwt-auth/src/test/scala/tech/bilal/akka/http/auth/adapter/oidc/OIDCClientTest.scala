@@ -13,7 +13,7 @@
 //    case (_, provider) =>
 //      implicit val system: ActorSystem[SpawnProtocol.Command] = provider
 //
-//      val client = new OIDCClient(
+//      val client =  OIDCClient(
 //        s"http://localhost:${settings.port}/auth/realms/master/.well-known/openid-configuration"
 //      )
 //

@@ -18,10 +18,10 @@
 //  fixture.test("can fetch keys") {
 //    case (_, actorSystem) =>
 //      implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
-//      val client = new OIDCClient(
+//      val client =  OIDCClient(
 //        s"http://localhost:${settings.port}/auth/realms/master/.well-known/openid-configuration"
 //      )
-//      val manager = new PublicKeyManager(client, 10.seconds)
+//      val manager =  PublicKeyManager(client, 10.seconds)
 //      val tokenFromServer =
 //        BearerToken.fromServer(settings.port, "admin", "admin")
 //      val header = getHeader(tokenFromServer.token)

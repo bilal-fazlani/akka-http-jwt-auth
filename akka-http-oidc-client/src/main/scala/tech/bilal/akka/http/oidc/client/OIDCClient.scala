@@ -10,7 +10,7 @@ import scala.concurrent.Future
 class OIDCClient(wellKnownUrl: String, httpCMaybe: Option[HttpClient] = None)(
     using system: ClassicActorSystemProvider
 ) {
-  private lazy val httpC = httpCMaybe.getOrElse(new HttpClient)
+  private lazy val httpC = httpCMaybe.getOrElse(HttpClient())
 
   lazy val fetchOIDCConfig: Future[OIDCConfig] =
     httpC.get[OIDCConfig](wellKnownUrl)

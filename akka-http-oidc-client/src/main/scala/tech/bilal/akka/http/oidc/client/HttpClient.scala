@@ -20,7 +20,7 @@ class HttpClient(using system: ClassicActorSystemProvider)
       .transform {
         case Success(value) if value.status.isFailure() =>
           Failure(
-            new RuntimeException(
+             RuntimeException(
               s"call to $url failed with status code ${value.status.intValue()}"
             )
           )

@@ -26,12 +26,12 @@
 //  fixture.test("can verify token") {
 //    case (_, actorSystem) =>
 //      implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
-//      val client = new OIDCClient(
+//      val client =  OIDCClient(
 //        s"http://localhost:${settings.port}/auth/realms/master/.well-known/openid-configuration"
 //      )
 //      println(BearerToken.fromServer(settings.port, "admin", "admin"))
-//      val manager = new PublicKeyManager(client, 10.seconds)
-//      val verifier = new JwtVerifier(client, manager)
+//      val manager =  PublicKeyManager(client, 10.seconds)
+//      val verifier =  JwtVerifier(client, manager)
 //      val token = BearerToken.fromServer(settings.port, "admin", "admin")
 //      val decoded = Await
 //        .result(verifier.verifyAndDecode[TestToken](token.token), 5.seconds)

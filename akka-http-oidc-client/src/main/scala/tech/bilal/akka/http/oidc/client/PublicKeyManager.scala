@@ -27,7 +27,7 @@ class PublicKeyManager(
   private case class State(map: Map[String, Key])
   private object State {
     def apply(keys: KeySet): State =
-      new State(keys.keys.map(k => (k.kid, k)).toMap)
+       State(keys.keys.map(k => (k.kid, k)).toMap)
   }
 
   private given Timeout(5.seconds)

@@ -25,7 +25,7 @@ inThisBuild(
     )),
     crossPaths := true,
     Test / parallelExecution := false,
-    testFrameworks += new TestFramework("munit.Framework")
+    testFrameworks +=  TestFramework("munit.Framework")
   )
 )
 

@@ -1,3 +1,6 @@
 package tech.bilal.akka.http.auth.adapter
 
-case class AuthConfig(supportedAlgorithms: Set[String])
+case class AuthConfig(
+    issuer: String,
+    supportedAlgorithms: Set[String]
+)

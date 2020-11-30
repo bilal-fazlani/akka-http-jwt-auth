@@ -19,11 +19,13 @@ class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager, au
         Future.fromTry(getKIDAndContents(tokenString))
       keyMayBe <- publicKeyManager.getKey(header.kid)
       key = keyMayBe.getOrElse(
-        throw new RuntimeException(
+        throw RuntimeException(
           s"could not find key with kid: ${header.kid}"
         )
       )
       issuer <- oidcClient.fetchOIDCConfig.map(_.issuer)
+      _ = if(issuer != authConfig.issuer)
+        throw RuntimeException("invalid token issuer")
       algo = authConfig.supportedAlgorithms.find(_.toLowerCase == header.alg.toLowerCase)
         .map(Algorithm.apply)
         .getOrElse(throw RuntimeException(s"unsupported algorithm - ${header.alg}"))

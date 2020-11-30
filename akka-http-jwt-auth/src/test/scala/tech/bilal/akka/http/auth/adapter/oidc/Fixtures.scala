@@ -27,7 +27,7 @@ trait Fixtures extends FunSuite {
     FunFixture[StopHandle](
       _ =>
         Await.result(
-          new EmbeddedKeycloak(keycloakData, settings).startServer(),
+           EmbeddedKeycloak(keycloakData, settings).startServer(),
           120.seconds
         ),
       s => s.stop()

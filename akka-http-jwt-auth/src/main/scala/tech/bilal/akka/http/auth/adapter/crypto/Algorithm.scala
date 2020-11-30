@@ -13,9 +13,9 @@ sealed trait Algorithm {
 }
 object Algorithm {
   def apply(algorithm: String): Try[Algorithm] =
-    algorithm match {
-      case "RSA" | "rsa" => Success(RSA)
-      case x             => Failure(new RuntimeException(s"Unsupported algorithm: $x"))
+    algorithm.toUpperCase match {
+      case "RSA" => Success(RSA)
+      case x     => Failure( RuntimeException(s"Unsupported algorithm: $x"))
     } //todo: support more algorithms
 
   private val base64Decoder = Base64.getUrlDecoder
@@ -24,9 +24,9 @@ object Algorithm {
     override def publicKey(key: Key, jwtHeader: JWTHeader): Try[PublicKey] = {
       Try {
         val kf: KeyFactory = KeyFactory.getInstance(key.kty)
-        val modulus = new BigInteger(1, base64Decoder.decode(key.n))
-        val exponent = new BigInteger(1, base64Decoder.decode(key.e))
-        val spec = new RSAPublicKeySpec(modulus, exponent)
+        val modulus =  BigInteger(1, base64Decoder.decode(key.n))
+        val exponent =  BigInteger(1, base64Decoder.decode(key.e))
+        val spec =  RSAPublicKeySpec(modulus, exponent)
         kf.generatePublic(spec)
       }
     }
