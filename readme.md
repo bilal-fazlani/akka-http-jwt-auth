@@ -8,3 +8,4 @@
 - [x] publish to maven
 - [ ] support and test with other auth servers
 - [ ] create documentation
+- [ ] migrate to scala 3
