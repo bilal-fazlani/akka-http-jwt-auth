@@ -4,17 +4,15 @@ import akka.actor.ClassicActorSystemProvider
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.http.scaladsl.model.MediaTypes
-import io.bullet.borer.Decoder
-import io.bullet.borer.compat.AkkaHttpCompat
-
+import akka.stream.Materializer
+import de.heikoseeberger.akkahttpjackson.JacksonSupport
+import scala.reflect.runtime.universe._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 class HttpClient(using system: ClassicActorSystemProvider)
-    extends AkkaHttpCompat {
-  def get[O: Decoder](url: String)(using ec: ExecutionContext): Future[O] = {
-    val unmarshaller =
-      borerUnmarshaller[O](jsonMediaType = MediaTypes.`application/json`)
+    extends JacksonSupport {
+  def get[O: TypeTag](url: String)(using ec: ExecutionContext): Future[O] = {
     Http()
       .singleRequest(Get(url))
       .transform {
@@ -25,7 +23,7 @@ class HttpClient(using system: ClassicActorSystemProvider)
             )
           )
         case x => x
-      }
-      .flatMap(res => unmarshaller(res.entity))
+      }(ec)
+      .flatMap(res => unmarshaller.apply(res.entity)(ec, Materializer(system)))(ec)
   }
 }

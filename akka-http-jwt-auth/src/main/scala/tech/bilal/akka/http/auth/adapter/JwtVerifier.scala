@@ -1,21 +1,27 @@
 package tech.bilal.akka.http.auth.adapter
 
-import io.bullet.borer.{Decoder, Json}
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
+import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
 import pdi.jwt.{Jwt, JwtOptions}
 import tech.bilal.akka.http.auth.adapter.crypto.Algorithm
-import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
+import tech.bilal.akka.http.oidc.client.{JsonUtil, OIDCClient, PublicKeyManager}
 import tech.bilal.akka.http.oidc.client.models.JWTHeader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.reflect.{ClassTag, classTag}
 import scala.util.Try
+
+
 
 class JwtVerifier(
     oidcClient: OIDCClient,
     publicKeyManager: PublicKeyManager,
     authConfig: AuthConfig
 ) {
-  def verifyAndDecode[T: Decoder](tokenString: String): Future[Option[T]] = {
+  
+  
+  def verifyAndDecode[T:ClassTag](tokenString: String): Future[Option[T]] = {
     val jwtOptions =
       JwtOptions(signature = true, expiration = true, notBefore = true)
     for {
@@ -40,10 +46,12 @@ class JwtVerifier(
       publicKey <- Future.fromTry(algo.flatMap(_.publicKey(key, header)))
       _ = Jwt.validate(tokenString, publicKey, jwtOptions)
       token <-
-        Future.fromTry(Json.decode(jsonPayloadContents.getBytes).to[T].valueTry)
+        Future.fromTry(JsonUtil.fromJson[T](jsonPayloadContents))
     } yield Some(token)
   }
 
+  
+  
   private def getKIDAndContents(header: String): Try[(JWTHeader, String)] =
     Jwt
       .decodeRawAll(
@@ -52,11 +60,7 @@ class JwtVerifier(
       )
       .flatMap {
         case (decodedHeader, contents, _) =>
-          Json
-            .decode(decodedHeader.getBytes)
-            .to[JWTHeader]
-            .valueEither
-            .toTry
-            .map((_, contents))
+          JsonUtil.fromJson[JWTHeader](decodedHeader)
+          .map((_, contents))
       }
 }

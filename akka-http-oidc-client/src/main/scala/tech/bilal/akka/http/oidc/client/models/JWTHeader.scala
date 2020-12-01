@@ -1,6 +1,6 @@
 package tech.bilal.akka.http.oidc.client.models
 
-import io.bullet.borer.Decoder
+//import io.bullet.borer.Decoder
 
 case class JWTHeader(
     typ: Option[String] = None, 
@@ -11,7 +11,7 @@ case class JWTHeader(
 )
 
 object JWTHeader {
-  import io.bullet.borer.NullOptions._
+//  import io.bullet.borer.NullOptions._
   //todo: because macro is not being used, null values for typ may not work 
-  given dec as Decoder[JWTHeader] = Decoder.from(JWTHeader.apply _)
+//  given dec as Decoder[JWTHeader] = Decoder.from(JWTHeader.apply _)
 }

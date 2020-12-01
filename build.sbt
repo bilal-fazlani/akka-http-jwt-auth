@@ -25,7 +25,8 @@ inThisBuild(
     )),
     crossPaths := true,
     Test / parallelExecution := false,
-    testFrameworks += TestFramework("munit.Framework")
+    testFrameworks += TestFramework("munit.Framework"),
+    parallelExecution in Test in ThisBuild := false
   )
 )
 
@@ -45,9 +46,9 @@ lazy val `akka-http-oidc-client` = project
       Libs.`akka-actor-typed`,
       Libs.`akka-http`,
       Libs.`akka-stream`,
-      Libs.`borer-core`,
-      Libs.`borer-akka`,
-      TestLibs.`embedded-keycloak` % Test
+      Json.`akka-http-jackson`,
+      TestLibs.`embedded-keycloak` % Test,
+      Libs.`slf4j-simple` % Test,
     ).map(_.withDottyCompat(scalaVersion.value))++ Seq(
       TestLibs.munit % Test
     )
@@ -60,8 +61,9 @@ lazy val `akka-http-jwt-auth` = project
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`jwt-core`,
-      Libs.`borer-core`,
-      TestLibs.`embedded-keycloak` % Test
+      Json.`akka-http-jackson`,
+      TestLibs.`embedded-keycloak` % Test,
+      Libs.`slf4j-simple` % Test,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       TestLibs.munit % Test
     )
@@ -76,6 +78,7 @@ lazy val example = project
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`akka-actor-typed`,
+      Libs.`slf4j-simple`,
       TestLibs.`embedded-keycloak`
     ).map(_.withDottyCompat(scalaVersion.value))
   )

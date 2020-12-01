@@ -1,7 +1,6 @@
 package tech.bilal.akka.http.auth.adapter
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import io.bullet.borer.Decoder
 import munit.FunSuite
 import org.tmt.embedded_keycloak.utils.BearerToken
 import tech.bilal.akka.http.auth.adapter.{AuthConfig, JwtVerifier}
@@ -20,9 +19,7 @@ class JwtVerifierTest extends FunSuite with Fixtures {
       sub: String,
       iss: String
   )
-
-  private given dec as Decoder[TestToken] = Decoder.from(TestToken.apply _)
-
+  
   fixture.test("can verify token") {
     case (_, actorSystem) =>
       implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
@@ -37,7 +34,7 @@ class JwtVerifierTest extends FunSuite with Fixtures {
       ))
       val token = BearerToken.fromServer(settings.port, "admin", "admin")
       val decoded = Await
-        .result(verifier.verifyAndDecode[TestToken](token.token), 5.seconds)
+        .result(verifier.verifyAndDecode[TestToken](token.token), 10.seconds)
         .get
       assertEquals(decoded.preferred_username, "admin")
   }

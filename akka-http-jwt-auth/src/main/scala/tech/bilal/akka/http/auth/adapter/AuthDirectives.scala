@@ -1,16 +1,11 @@
 package tech.bilal.akka.http.auth.adapter
 
-import akka.http.scaladsl.server.Directives.{
-  authorize => akkaAuth,
-  authorizeAsync => akkaAuthAsync,
-  _
-}
+import akka.http.scaladsl.server.Directives.{authorize => akkaAuth, authorizeAsync => akkaAuthAsync, _}
 import akka.http.scaladsl.server._
-import io.bullet.borer.Decoder
-
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
-class AuthDirectives[T: Decoder](
+class AuthDirectives[T: ClassTag](
     authentication: AsyncAuthenticatorFactory[T],
     realm: String
 )(using

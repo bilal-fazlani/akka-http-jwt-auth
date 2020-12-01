@@ -1,7 +1,6 @@
 package example
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import io.bullet.borer.Decoder
 import tech.bilal.akka.http.auth.adapter.{AsyncAuthenticatorFactory, AuthConfig, AuthDirectives, JwtVerifier}
 import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
 
@@ -16,8 +15,6 @@ trait Boilerplate {
   given ExecutionContext = actorSystem.executionContext
 
   case class AT(preferred_username: String)
-
-  given Decoder[AT] = Decoder.from(AT.apply _)
 
   val authUrl =
     s"http://localhost:8080/auth/realms/master/.well-known/openid-configuration"
