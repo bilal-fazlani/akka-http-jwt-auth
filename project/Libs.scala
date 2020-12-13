@@ -1,7 +1,7 @@
 import sbt._
 
 object Libs {
-  lazy val `akka-http` = "com.typesafe.akka" %% "akka-http" % "10.2.0"
+  lazy val `akka-http` = "com.typesafe.akka" %% "akka-http" % "10.2.2"
   lazy val `akka-actor-typed` =
     "com.typesafe.akka" %% "akka-actor-typed" % "2.6.8"
   lazy val `akka-stream` = "com.typesafe.akka" %% "akka-stream" % "2.6.8"
