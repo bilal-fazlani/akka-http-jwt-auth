@@ -90,9 +90,8 @@ class PublicKeyManager(
               import ctx.executionContext
               oidcClient.fetchKeys
                 .map(keys => ctx.self ! SetKeys(keys))
-                .recover {
-                  case NonFatal(_) =>
-                    println("WARNING: could not refresh keys")
+                .recover { case NonFatal(_) =>
+                  println("WARNING: could not refresh keys")
                 }
               Behaviors.same
           }

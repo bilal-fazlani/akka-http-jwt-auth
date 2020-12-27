@@ -40,13 +40,12 @@ class JwtVerifier(oidcClient: OIDCClient, publicKeyManager: PublicKeyManager) {
         header,
         JwtOptions(signature = false, expiration = false, notBefore = false)
       )
-      .flatMap {
-        case (decodedHeader, contents, _) =>
-          Json
-            .decode(decodedHeader.getBytes)
-            .to[JWTHeader]
-            .valueEither
-            .toTry
-            .map((_, contents))
+      .flatMap { case (decodedHeader, contents, _) =>
+        Json
+          .decode(decodedHeader.getBytes)
+          .to[JWTHeader]
+          .valueEither
+          .toTry
+          .map((_, contents))
       }
 }

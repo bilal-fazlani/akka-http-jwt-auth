@@ -27,9 +27,8 @@ object Main extends App with Boilerplate {
     .map { _ =>
       println(s"server started at $port")
     }
-    .recover {
-      case x =>
-        x.printStackTrace()
-        actorSystem.terminate()
+    .recover { case x =>
+      x.printStackTrace()
+      actorSystem.terminate()
     }
 }
