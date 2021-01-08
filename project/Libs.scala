@@ -20,5 +20,5 @@ object Libs {
 object TestLibs {
   lazy val `embedded-keycloak` =
     "com.github.tmtsoftware.embedded-keycloak" %% "embedded-keycloak" % "7fd5623"
-  lazy val munit = "org.scalameta" %% "munit" % "0.7.19"
+  lazy val munit = "org.scalameta" %% "munit" % "0.7.20"
 }

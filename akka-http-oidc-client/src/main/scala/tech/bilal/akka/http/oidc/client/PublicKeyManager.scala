@@ -30,8 +30,8 @@ class PublicKeyManager(
        State(keys.keys.map(k => (k.kid, k)).toMap)
   }
 
-  private given Timeout(5.seconds)
-  private given akka.actor.typed.Scheduler = actorSystem.scheduler
+  given timeout:Timeout = Timeout(5.seconds)
+  given akka.actor.typed.Scheduler = actorSystem.scheduler
 
   import actorSystem.executionContext
 

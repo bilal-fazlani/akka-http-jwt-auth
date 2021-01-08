@@ -10,7 +10,7 @@ import scala.concurrent.duration.DurationInt
 trait Boilerplate {
   val port = 9876
 
-  given actorSystem as ActorSystem[SpawnProtocol.Command] = ActorSystem(SpawnProtocol(), "main")
+  given actorSystem: ActorSystem[SpawnProtocol.Command] = ActorSystem(SpawnProtocol(), "main")
 
   given ExecutionContext = actorSystem.executionContext
 
