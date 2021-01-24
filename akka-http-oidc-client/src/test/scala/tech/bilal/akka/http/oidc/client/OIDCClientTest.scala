@@ -13,7 +13,7 @@ class OIDCClientTest extends FunSuite with Fixtures {
     case (_, provider) =>
       implicit val system: ActorSystem[SpawnProtocol.Command] = provider
 
-      val client =  OIDCClient(
+      val client = OIDCClient(
         s"http://localhost:${settings.port}/auth/realms/master/.well-known/openid-configuration"
       )
 

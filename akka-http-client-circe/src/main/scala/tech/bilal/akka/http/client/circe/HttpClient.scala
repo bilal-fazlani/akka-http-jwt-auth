@@ -5,14 +5,14 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.http.scaladsl.model.MediaTypes
 import akka.stream.Materializer
-import de.heikoseeberger.akkahttpjackson.JacksonSupport
-import scala.reflect.runtime.universe._
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingUnmarshaller
+import de.heikoseeberger.akkahttpcirce.BaseCirceSupport
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
+import io.circe.Decoder
 
-class HttpClient(using system: ClassicActorSystemProvider)
-    extends JacksonSupport {
-  def get[O: TypeTag](url: String)(using ec: ExecutionContext): Future[O] = {
+class HttpClient(using system: ClassicActorSystemProvider) extends BaseCirceSupport with ErrorAccumulatingUnmarshaller {
+  def get[O: Decoder](url: String)(using ec: ExecutionContext) : Future[O] = {
     Http()
       .singleRequest(Get(url))
       .transform {
@@ -24,6 +24,6 @@ class HttpClient(using system: ClassicActorSystemProvider)
           )
         case x => x
       }(ec)
-      .flatMap(res => unmarshaller.apply(res.entity)(ec, Materializer(system)))(ec)
+      .flatMap(res => unmarshaller[O].apply(res.entity))
   }
 }

@@ -1,9 +1,8 @@
 package tech.bilal.akka.http.oidc.client.models
 
-//import io.bullet.borer.Decoder
+import io.circe.Decoder
 
 case class OIDCConfig(jwks_uri: String, issuer: String)
 object OIDCConfig {
-//  given oidcConfigDec as Decoder[OIDCConfig] =
-//    Decoder.from(OIDCConfig.apply _)
+    given Decoder[OIDCConfig] = Decoder.forProduct2("jwks_uri", "issuer")(OIDCConfig.apply)
 }

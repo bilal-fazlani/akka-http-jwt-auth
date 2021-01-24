@@ -1,6 +1,7 @@
 package example
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
+import io.circe.Decoder
 import tech.bilal.akka.http.auth.adapter.{AsyncAuthenticatorFactory, AuthConfig, AuthDirectives, JwtVerifier}
 import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
 
@@ -15,6 +16,8 @@ trait Boilerplate {
   given ExecutionContext = actorSystem.executionContext
 
   case class AT(preferred_username: String)
+  
+  given Decoder[AT] = Decoder.forProduct1("preferred_username")(AT.apply)
 
   val authUrl =
     s"http://localhost:8080/auth/realms/master/.well-known/openid-configuration"
@@ -22,7 +25,7 @@ trait Boilerplate {
   val authDirectives =
     AuthDirectives[AT](
       AsyncAuthenticatorFactory[AT](
-        JwtVerifier(oIDCClient, PublicKeyManager(oIDCClient, 24.hours), AuthConfig("localhost:8080", Set("RSA")))
+        JwtVerifier(oIDCClient, PublicKeyManager(oIDCClient, 24.hours), AuthConfig("http://localhost:8080/auth/realms/master", Set("RS256")))
       ),
       "master"
     )

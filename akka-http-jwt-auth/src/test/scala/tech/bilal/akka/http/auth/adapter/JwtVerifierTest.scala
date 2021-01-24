@@ -1,6 +1,7 @@
 package tech.bilal.akka.http.auth.adapter
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
+import io.circe.Decoder
 import munit.FunSuite
 import org.tmt.embedded_keycloak.utils.BearerToken
 import tech.bilal.akka.http.auth.adapter.{AuthConfig, JwtVerifier}
@@ -13,13 +14,15 @@ class JwtVerifierTest extends FunSuite with Fixtures {
   
   private val fixture = FunFixture.map2(keycloak, actorSystem())
 
-  private case class TestToken(
+  case class TestToken(
       preferred_username: String,
       scope: String,
       sub: String,
       iss: String
   )
-  
+  given Decoder[TestToken] = Decoder
+    .forProduct4("preferred_username", "scope", "sub", "iss")(TestToken.apply)
+   
   fixture.test("can verify token") {
     case (_, actorSystem) =>
       implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
@@ -30,7 +33,7 @@ class JwtVerifierTest extends FunSuite with Fixtures {
       val manager =  PublicKeyManager(client, 10.seconds)
       val verifier =  JwtVerifier(client, manager, AuthConfig(
         s"http://localhost:${settings.port}/auth/realms/master",
-        Set("RSA")
+        Set("RS256")
       ))
       val token = BearerToken.fromServer(settings.port, "admin", "admin")
       val decoded = Await

@@ -1,18 +1,15 @@
 package tech.bilal.akka.http.auth.adapter
 
-import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
-import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
+import io.circe.Decoder
 import pdi.jwt.{Jwt, JwtOptions}
 import tech.bilal.akka.http.auth.adapter.crypto.Algorithm
-import tech.bilal.akka.http.oidc.client.{JsonUtil, OIDCClient, PublicKeyManager}
+import tech.bilal.akka.http.oidc.client.{OIDCClient, PublicKeyManager}
 import tech.bilal.akka.http.oidc.client.models.JWTHeader
-
+import io.circe.parser.decode
+import java.security.PublicKey
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.reflect.{ClassTag, classTag}
 import scala.util.Try
-
-
 
 class JwtVerifier(
     oidcClient: OIDCClient,
@@ -20,8 +17,7 @@ class JwtVerifier(
     authConfig: AuthConfig
 ) {
   
-  
-  def verifyAndDecode[T:ClassTag](tokenString: String): Future[Option[T]] = {
+  def verifyAndDecode[T:Decoder](tokenString: String): Future[Option[T]] = {
     val jwtOptions =
       JwtOptions(signature = true, expiration = true, notBefore = true)
     for {
@@ -34,19 +30,20 @@ class JwtVerifier(
         )
       )
       issuer <- oidcClient.fetchOIDCConfig.map(_.issuer)
-      _ = if (issuer != authConfig.issuer)
+      _ = if (issuer != authConfig.issuer) {
+        println(s"different issuers: $issuer != ${authConfig.issuer}")
         throw RuntimeException("invalid token issuer")
-      algo =
+      }
+      algo: Try[Algorithm] =
         authConfig.supportedAlgorithms
           .find(_.toLowerCase == header.alg.toLowerCase)
           .map(Algorithm.apply)
           .getOrElse(
             throw RuntimeException(s"unsupported algorithm - ${header.alg}")
           )
-      publicKey <- Future.fromTry(algo.flatMap(_.publicKey(key, header)))
+      publicKey: PublicKey <- Future.fromTry(algo.flatMap(_.publicKey(key, header)))
       _ = Jwt.validate(tokenString, publicKey, jwtOptions)
-      token <-
-        Future.fromTry(JsonUtil.fromJson[T](jsonPayloadContents))
+      token <- Future.fromTry(decode[T](jsonPayloadContents).toTry)
     } yield Some(token)
   }
 
@@ -60,7 +57,8 @@ class JwtVerifier(
       )
       .flatMap {
         case (decodedHeader, contents, _) =>
-          JsonUtil.fromJson[JWTHeader](decodedHeader)
-          .map((_, contents))
+          decode[JWTHeader](decodedHeader)
+            .map((_, contents))
+            .toTry
       }
 }
