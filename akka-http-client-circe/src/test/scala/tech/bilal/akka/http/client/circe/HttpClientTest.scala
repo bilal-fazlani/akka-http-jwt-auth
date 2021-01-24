@@ -14,11 +14,20 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
 class HttpClientTest extends munit.FunSuite with ActorSystemMixin() {
-  test("can get and deserialize json from web api"){
+  test("should get and deserialize json from web api"){
     given system: ActorSystem[SpawnProtocol.Command] = actorSystem
     import system.executionContext
     val client = new HttpClient()
     val dto:Dto = client.get[Dto]("https://jsonplaceholder.typicode.com/todos/1").block
     assertEquals(dto, Dto(1,false,1,"delectus aut autem"))
+  }
+
+  test("should fail when 404 occurs"){
+    interceptMessage[RuntimeException]("call to https://jsonplaceholder.typicode.com/todos/404 failed with status code 404"){
+      given system: ActorSystem[SpawnProtocol.Command] = actorSystem
+      import system.executionContext
+      val client = new HttpClient()
+      val dto:Dto = client.get[Dto]("https://jsonplaceholder.typicode.com/todos/404").block 
+    }
   }
 }
