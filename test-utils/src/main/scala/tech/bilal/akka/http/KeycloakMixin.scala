@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 
 trait KeycloakMixin(keycloakData: Option[KeycloakData] = None)
-    extends FunSuite {
+  extends FunSuite {
   var stopHandle: StopHandle = null
   protected val keycloakSettings: Settings = Settings(printProcessLogs = false)
   val keycloak: EmbeddedKeycloak = EmbeddedKeycloak(

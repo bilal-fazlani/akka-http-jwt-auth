@@ -40,6 +40,7 @@ lazy val `akka-http-jwt-auth-root` = project
     `akka-http-jwt-auth`,
     `akka-http-oidc-client`,
     `akka-http-client-circe`,
+    `test-utils`,
     example
   )
 
@@ -55,7 +56,7 @@ lazy val `akka-http-oidc-client` = project
       TestLibs.munit % Test
     )
   )
-  .dependsOn(`akka-http-client-circe`)
+  .dependsOn(`akka-http-client-circe`, `test-utils` % Test)
 
 lazy val `akka-http-jwt-auth` = project
   .in(file("./akka-http-jwt-auth"))
@@ -71,7 +72,7 @@ lazy val `akka-http-jwt-auth` = project
       TestLibs.munit % Test
     )
   )
-  .dependsOn(`akka-http-oidc-client` % "compile->compile;test->test")
+  .dependsOn(`akka-http-oidc-client`, `test-utils` % Test)
 
 lazy val `akka-http-client-circe` = project
   .in(file("./akka-http-client-circe"))
@@ -81,11 +82,26 @@ lazy val `akka-http-client-circe` = project
       Libs.`akka-http`,
       Libs.`akka-stream`,
       Json.`akka-http-circe`,
-      TestLibs.logback,
+      TestLibs.logback % Test,
       Libs.`slf4j-simple` % Test,
       Libs.`akka-actor-typed` % Test
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       TestLibs.munit % Test
+    )
+  ).dependsOn(`test-utils` % Test)
+
+lazy val `test-utils` = project
+  .in(file("./test-utils"))
+  .settings(
+    name := "test-utils",
+    skip in publish := true,
+    libraryDependencies ++= Seq(
+      Json.`akka-http-circe`,
+      Libs.`akka-http`,
+      Libs.`akka-actor-typed`,
+      TestLibs.`embedded-keycloak`
+    ).map(_.withDottyCompat(scalaVersion.value))++ Seq(
+      TestLibs.munit
     )
   )
 

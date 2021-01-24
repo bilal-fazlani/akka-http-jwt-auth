@@ -9,12 +9,15 @@ object Json {
 }
 
 object Libs {
+  private val AkkaVersion = "2.6.10"
+  private val AkkaHttpVersion = "10.2.3"
+  
   lazy val `slf4j-simple` = "org.slf4j" % "slf4j-simple" % "2.0.0-alpha1"
-  lazy val `akka-http` = "com.typesafe.akka" %% "akka-http" % "10.2.1"
+  lazy val `akka-http` = "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
   lazy val `akka-actor-typed` =
-    "com.typesafe.akka" %% "akka-actor-typed" % "2.6.10"
-  lazy val `akka-stream` = "com.typesafe.akka" %% "akka-stream" % "2.6.10"
-  lazy val `jwt-core` = "com.pauldijou" %% "jwt-core" % "4.3.0"
+    "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion
+  lazy val `akka-stream` = "com.typesafe.akka" %% "akka-stream" % AkkaVersion
+  lazy val `jwt-core` = "com.pauldijou" %% "jwt-core" % "5.0.0"
 }
 
 object TestLibs {
