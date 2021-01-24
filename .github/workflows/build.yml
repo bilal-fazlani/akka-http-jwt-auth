@@ -25,4 +25,4 @@ jobs:
       with:
         java-version: 11
     - name: Compile and run tests
-      run: sbt ";clean ;test"
+      run: sbt ";clean ;akka-http-jwt-auth/test; akka-http-oidc-client/test;"
