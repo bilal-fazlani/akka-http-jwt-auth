@@ -1,24 +1,21 @@
 package tech.bilal.akka.http.oidc.client
 
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import tech.bilal.akka.http.oidc.client.OIDCClient
 import munit.FunSuite
+import tech.bilal.akka.http.{ActorSystemMixin, KeycloakMixin}
 import scala.concurrent.ExecutionContext.Implicits.global
+import tech.bilal.akka.http.oidc.client.OIDCClient
 
-class OIDCClientTest extends FunSuite with Fixtures {
+class OIDCClientTest extends FunSuite with ActorSystemMixin() with KeycloakMixin() {
+  test("can fetch oidc config") {
+    implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
 
-  private val fixture = FunFixture.map2(keycloak, actorSystem())
+    val client = OIDCClient(
+      s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"
+    )
 
-  fixture.test("can fetch oidc config") {
-    case (_, provider) =>
-      implicit val system: ActorSystem[SpawnProtocol.Command] = provider
-
-      val client = OIDCClient(
-        s"http://localhost:${settings.port}/auth/realms/master/.well-known/openid-configuration"
-      )
-
-      client.fetchKeys.map { keySet =>
-        assert(keySet.keys.nonEmpty)
-      }
+    client.fetchKeys.map { keySet =>
+      assert(keySet.keys.nonEmpty)
+    }
   }
 }

@@ -1,5 +1,7 @@
 package tech.bilal.akka.http.auth.adapter.crypto
 
+import tech.bilal.akka.http.auth.adapter.JWTHeader
+
 import java.math.BigInteger
 import java.security.spec.RSAPublicKeySpec
 import java.security.{KeyFactory, PublicKey}

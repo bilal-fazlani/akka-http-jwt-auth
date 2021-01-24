@@ -32,10 +32,7 @@ object Main extends App with Boilerplate {
     .map { _ =>
       val token = BearerToken.fromServer(8080, "admin", "admin")
       println(s"use this to test /secure endpoint")
-      println(
-        s"""http GET http://localhost:$port/secure \\
-          |'Authorization:Bearer ${token.token}' 
-          |""".stripMargin)
+      println(s"http GET http://localhost:$port/secure 'Authorization:Bearer ${token.token}'")
     }
     .recover {
       case x =>

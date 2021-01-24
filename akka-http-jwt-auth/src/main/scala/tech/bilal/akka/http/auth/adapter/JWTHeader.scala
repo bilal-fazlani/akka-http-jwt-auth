@@ -1,4 +1,4 @@
-package tech.bilal.akka.http.oidc.client.models
+package tech.bilal.akka.http.auth.adapter
 
 import io.circe.Decoder
 
