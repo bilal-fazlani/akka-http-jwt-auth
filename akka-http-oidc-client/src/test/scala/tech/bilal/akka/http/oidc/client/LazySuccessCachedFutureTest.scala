@@ -132,7 +132,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     assertEquals(called, 4)
   }
 
-  test("when a failing future takes more time than timeout".only) {
+  test("when a failing future takes more time than timeout") {
     given ActorSystem[_] = actorTestKit.internalSystem
 
     given Scheduler = actorTestKit.internalSystem.scheduler
