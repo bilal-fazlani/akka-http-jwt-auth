@@ -10,6 +10,7 @@ import tech.bilal.akka.http.oidc.client.OIDCClient
 import tech.bilal.akka.http.client.circe.HttpClient
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
+import io.circe.Codec.AsObject
 
 class JwtVerifierTest extends FunSuite with ActorSystemMixin() with KeycloakMixin() {
   
@@ -18,10 +19,8 @@ class JwtVerifierTest extends FunSuite with ActorSystemMixin() with KeycloakMixi
       scope: String,
       sub: String,
       iss: String
-  )
-  given Decoder[TestToken] = Decoder
-    .forProduct4("preferred_username", "scope", "sub", "iss")(TestToken.apply)
-  
+  ) derives AsObject
+
   test("can verify token") {
     implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
     val authUrl = s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"

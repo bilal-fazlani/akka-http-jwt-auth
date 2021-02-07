@@ -7,7 +7,7 @@ import tech.bilal.akka.http.oidc.client.{LazySuccessCachedFuture, OIDCClient}
 import tech.bilal.akka.http.client.circe.HttpClient
 import tech.bilal.akka.http.auth.adapter.PublicKeyManager
 import tech.bilal.akka.http.oidc.client.models.OIDCConfig
-
+import io.circe.Codec.AsObject
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 
@@ -18,10 +18,8 @@ trait Boilerplate {
 
   given ExecutionContext = actorSystem.executionContext
 
-  case class AT(preferred_username: String)
+  case class AT(preferred_username: String) derives AsObject
   
-  given Decoder[AT] = Decoder.forProduct1("preferred_username")(AT.apply)
-
   private val authConfig: AuthConfig = AuthConfig(
     "master",
     s"http://localhost:8080/auth/realms/master/.well-known/openid-configuration",
