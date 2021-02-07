@@ -1,7 +1,10 @@
 inThisBuild(
   Seq(
     scalaVersion := "3.0.0-M3",
-    resolvers ++= Seq(Resolver.DefaultMavenRepository, "jitpack" at "https://jitpack.io", Resolver.JCenterRepository),
+    resolvers ++= Seq(
+      "jitpack" at "https://jitpack.io",
+      Resolver.JCenterRepository
+    ),
     organization := "tech.bilal",
     homepage := Some(
       url("https://github.com/bilal-fazlani/akka-http-jwt-auth")
@@ -28,7 +31,7 @@ inThisBuild(
     testFrameworks += TestFramework("munit.Framework"),
     parallelExecution in Test in ThisBuild := false,
     scalacOptions ++= Seq(
-      "-Xfatal-warnings",  // New lines for each options
+      "-Xfatal-warnings" // New lines for each options
     )
   )
 )
@@ -106,7 +109,7 @@ lazy val `test-utils` = project
       Libs.`akka-testkit`,
       Libs.`akka-actor-typed`,
       TestLibs.`embedded-keycloak`,
-      TestLibs.munit,
+      TestLibs.munit
     )
   )
 

@@ -34,9 +34,8 @@ object Main extends App with Boilerplate {
 //      println(s"use this to test /secure endpoint")
 //      println(s"http GET http://localhost:$port/secure 'Authorization:Bearer ${token.token}'")
 //    }
-    .recover {
-      case x =>
-        x.printStackTrace()
-        actorSystem.terminate()
+    .recover { case x =>
+      x.printStackTrace()
+      actorSystem.terminate()
     }
 }
