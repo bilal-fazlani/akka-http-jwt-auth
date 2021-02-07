@@ -1,18 +1,22 @@
 package tech.bilal.akka.http.auth.adapter
 
+import akka.util.Timeout
 import io.circe.Decoder
 import pdi.jwt.{Jwt, JwtOptions}
 import tech.bilal.akka.http.auth.adapter.crypto.Algorithm
 import tech.bilal.akka.http.oidc.client.OIDCClient
 import io.circe.parser.{decode, parse}
+import tech.bilal.akka.http.oidc.client.models.OIDCConfig
+import tech.bilal.akka.http.oidc.client.LazySuccessCachedFuture
 
 import java.security.PublicKey
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 import scala.util.Try
 
 class JwtVerifier(
-    oidcClient: OIDCClient,
+    oidcConfig: LazySuccessCachedFuture[OIDCConfig],
     publicKeyManager: PublicKeyManager,
     authConfig: AuthConfig
 ) {
@@ -35,7 +39,7 @@ class JwtVerifier(
             s"unabled to fetch keys from auth server"
           )
       }
-      serverIssuer <- oidcClient.fetchOIDCConfig.map(_.issuer)
+      serverIssuer <- oidcConfig.get(authConfig.keyFetchTimeout).map(_.issuer)
       algo: Try[Algorithm] =
         authConfig.supportedAlgorithms
           .find(_.toLowerCase == header.alg.toLowerCase)

@@ -5,6 +5,7 @@ import io.circe.parser.decode
 import munit.FunSuite
 import org.tmt.embedded_keycloak.utils.BearerToken
 import tech.bilal.akka.http._
+import tech.bilal.akka.http.client.circe.HttpClient
 import tech.bilal.akka.http.oidc.client.models._
 import tech.bilal.akka.http.oidc.client.OIDCClient
 
@@ -18,11 +19,10 @@ class PublicKeyManagerTest
     with ActorSystemMixin() {
 
   test("can fetch keys") {
-    implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
-    val client = OIDCClient(
-      s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"
-    )
-    val authConfig = AuthConfig()
+    given system: ActorSystem[SpawnProtocol.Command] = actorSystem
+    val authUrl = s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"
+    val client = OIDCClient(authUrl, HttpClient())
+    val authConfig = AuthConfig("master", authUrl)
     val manager = PublicKeyManager(client, authConfig)
     val tokenFromServer =
       BearerToken.fromServer(keycloakSettings.port, "admin", "admin")

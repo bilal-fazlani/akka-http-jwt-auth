@@ -29,11 +29,11 @@ object Main extends App with Boilerplate {
     .map { _ =>
       println(s"server started at $port")
     }
-    .map { _ =>
-      val token = BearerToken.fromServer(8080, "admin", "admin")
-      println(s"use this to test /secure endpoint")
-      println(s"http GET http://localhost:$port/secure 'Authorization:Bearer ${token.token}'")
-    }
+//    .map { _ =>
+//      val token = BearerToken.fromServer(8080, "admin", "admin")
+//      println(s"use this to test /secure endpoint")
+//      println(s"http GET http://localhost:$port/secure 'Authorization:Bearer ${token.token}'")
+//    }
     .recover {
       case x =>
         x.printStackTrace()

@@ -1,6 +1,6 @@
 package tech.bilal.akka.http.client.circe
 
-import tech.bilal.akka.http.oidc.client.HttpClient
+import tech.bilal.akka.http.client.circe.HttpClient
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.actor.typed.scaladsl._
 import akka.http.scaladsl.client.RequestBuilding.Get

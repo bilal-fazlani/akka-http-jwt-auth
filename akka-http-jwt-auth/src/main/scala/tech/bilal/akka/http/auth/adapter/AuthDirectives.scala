@@ -2,12 +2,13 @@ package tech.bilal.akka.http.auth.adapter
 
 import akka.http.scaladsl.server.Directives.{authorize => akkaAuth, authorizeAsync => akkaAuthAsync, _}
 import akka.http.scaladsl.server._
-import scala.concurrent.{ExecutionContext, Future}
-import scala.reflect.ClassTag
+import io.circe.Decoder
 
-class AuthDirectives[T: ClassTag](
+import scala.concurrent.{ExecutionContext, Future}
+
+class AuthDirectives[T: Decoder](
     authentication: AsyncAuthenticatorFactory[T],
-    realm: String
+    authConfig: AuthConfig
 )(using
     ec: ExecutionContext
 ) {
@@ -19,5 +20,5 @@ class AuthDirectives[T: ClassTag](
   def asyncPolicy(policy: T => Future[Boolean]): Directive0 =
     token.flatMap(t => akkaAuthAsync(policy(t)))
 
-  def token: Directive1[T] = authenticateOAuth2Async(realm, auth)
+  def token: Directive1[T] = authenticateOAuth2Async(authConfig.realm, auth)
 }

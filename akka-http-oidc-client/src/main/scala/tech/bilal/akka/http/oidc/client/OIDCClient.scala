@@ -1,25 +1,32 @@
 package tech.bilal.akka.http.oidc.client
 
 import akka.actor.ClassicActorSystemProvider
+import akka.actor.typed.{ActorSystem, Scheduler}
+import akka.actor.typed.SpawnProtocol.Command
+import akka.util.Timeout
+import tech.bilal.akka.http.client.circe.HttpClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.ExecutionContext
 import tech.bilal.akka.http.oidc.client.models._
 
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
-class OIDCClient(wellKnownUrl: String, httpCMaybe: Option[HttpClient] = None)(
-    using system: ClassicActorSystemProvider
+class OIDCClient(wellKnownUrl: String, httpClient: HttpClient)(
+    using actorSystem: ActorSystem[Command]
 ) {
-  private lazy val httpC = httpCMaybe.getOrElse(HttpClient())
+  given Scheduler = actorSystem.scheduler
+  val oidcConfig = LazySuccessCachedFuture[OIDCConfig](httpClient.get[OIDCConfig](wellKnownUrl))
 
-  given ExecutionContext = scala.concurrent.ExecutionContext.global
+  var calledTimes = 0
   
-  lazy val fetchOIDCConfig: Future[OIDCConfig] =
-    httpC.get[OIDCConfig](wellKnownUrl)
-
-  def fetchKeys: Future[KeySet] =
+  def fetchKeys(timeout: Timeout): Future[KeySet] = {
+    calledTimes +=1
+    println(s"fetchKeys called $calledTimes times")
     for {
-      config <- fetchOIDCConfig
-      keys <- httpC.get[KeySet](config.jwks_uri)
+      config <- oidcConfig.get(timeout)
+      keys <- httpClient.get[KeySet](config.jwks_uri)
     } yield keys
+  }
 }

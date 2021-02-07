@@ -1,7 +1,7 @@
 inThisBuild(
   Seq(
     scalaVersion := "3.0.0-M3",
-    resolvers += "jitpack" at "https://jitpack.io",
+    resolvers ++= Seq(Resolver.DefaultMavenRepository, "jitpack" at "https://jitpack.io", Resolver.JCenterRepository),
     organization := "tech.bilal",
     homepage := Some(
       url("https://github.com/bilal-fazlani/akka-http-jwt-auth")
@@ -51,8 +51,7 @@ lazy val `akka-http-oidc-client` = project
     libraryDependencies ++= Seq(
       Libs.`akka-actor-typed`,
       TestLibs.`embedded-keycloak` % Test,
-      Libs.`slf4j-simple` % Test
-    ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
+      Libs.`slf4j-simple` % Test,
       TestLibs.munit % Test
     )
   )
@@ -67,8 +66,7 @@ lazy val `akka-http-jwt-auth` = project
       Libs.`jwt-core`,
       TestLibs.logback,
       TestLibs.`embedded-keycloak` % Test,
-      Libs.`slf4j-simple` % Test
-    ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
+      Libs.`slf4j-simple` % Test,
       TestLibs.munit % Test
     )
   )
@@ -81,14 +79,16 @@ lazy val `akka-http-client-circe` = project
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`akka-stream`,
-      Json.`akka-http-circe`,
+      Json.`circe-core`,
+      Json.`circe-generic`,
+      Json.`circe-parser`,
       TestLibs.logback % Test,
       Libs.`slf4j-simple` % Test,
-      Libs.`akka-actor-typed` % Test
-    ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
+      Libs.`akka-actor-typed` % Test,
       TestLibs.munit % Test
     )
-  ).dependsOn(`test-utils` % Test)
+  )
+  .dependsOn(`test-utils` % Test)
 
 lazy val `test-utils` = project
   .in(file("./test-utils"))
@@ -96,12 +96,14 @@ lazy val `test-utils` = project
     name := "test-utils",
     skip in publish := true,
     libraryDependencies ++= Seq(
-      Json.`akka-http-circe`,
+      Json.`circe-core`,
+      Json.`circe-generic`,
+      Json.`circe-parser`,
       Libs.`akka-http`,
+      Libs.`akka-testkit`,
       Libs.`akka-actor-typed`,
-      TestLibs.`embedded-keycloak`
-    ).map(_.withDottyCompat(scalaVersion.value))++ Seq(
-      TestLibs.munit
+      TestLibs.`embedded-keycloak`,
+      TestLibs.munit,
     )
   )
 
@@ -115,6 +117,6 @@ lazy val example = project
       Libs.`akka-actor-typed`,
       Libs.`slf4j-simple`,
       TestLibs.`embedded-keycloak`
-    ).map(_.withDottyCompat(scalaVersion.value))
+    )
   )
   .dependsOn(`akka-http-jwt-auth`)
