@@ -16,8 +16,6 @@ trait Boilerplate {
 
   given actorSystem: ActorSystem[SpawnProtocol.Command] = ActorSystem(SpawnProtocol(), "main")
 
-  given ExecutionContext = actorSystem.executionContext
-
   case class AT(preferred_username: String) derives AsObject
   
   private val authConfig: AuthConfig = AuthConfig(
@@ -26,12 +24,5 @@ trait Boilerplate {
     keyRefreshIntervalWhenDisconnected = 8.seconds
   )
   
-  private val oIDCClient:OIDCClient = OIDCClient(authConfig.openIdConfigUrl, HttpClient())
-  val authDirectives =
-    AuthDirectives[AT](
-      AsyncAuthenticatorFactory[AT](
-        JwtVerifier(oIDCClient.oidcConfig, PublicKeyManager(oIDCClient, authConfig), authConfig)
-      ),
-      authConfig
-    )
+  val authDirectives = AuthDirectives[AT](authConfig)
 }

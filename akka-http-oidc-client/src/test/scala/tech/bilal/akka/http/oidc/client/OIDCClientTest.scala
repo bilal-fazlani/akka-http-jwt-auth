@@ -15,8 +15,7 @@ class OIDCClientTest extends FunSuite with ActorSystemMixin() with KeycloakMixin
     implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
 
     val client = OIDCClient(
-      s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration",
-      HttpClient()
+      s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"
     )
 
     client.fetchKeys(10.seconds).map { keySet =>

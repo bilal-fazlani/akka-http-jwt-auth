@@ -13,7 +13,7 @@ import tech.bilal.akka.http.oidc.client.models._
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
-class OIDCClient(wellKnownUrl: String, httpClient: HttpClient)(
+class OIDCClient private[bilal] (wellKnownUrl: String, httpClient: HttpClient)(
     using actorSystem: ActorSystem[Command]
 ) {
   given Scheduler = actorSystem.scheduler
@@ -25,4 +25,8 @@ class OIDCClient(wellKnownUrl: String, httpClient: HttpClient)(
       keys <- httpClient.get[KeySet](config.jwks_uri)
     } yield keys
   }
+}
+object OIDCClient{
+  def apply(wellKnownUrl: String)(using actorSystem: ActorSystem[Command]):OIDCClient = 
+      new OIDCClient(wellKnownUrl, HttpClient())
 }

@@ -21,7 +21,7 @@ class PublicKeyManagerTest
   test("can fetch keys") {
     given system: ActorSystem[SpawnProtocol.Command] = actorSystem
     val authUrl = s"http://localhost:${keycloakSettings.port}/auth/realms/master/.well-known/openid-configuration"
-    val client = OIDCClient(authUrl, HttpClient())
+    val client = OIDCClient(authUrl)
     val authConfig = AuthConfig("master", authUrl)
     val manager = PublicKeyManager(client, authConfig)
     val tokenFromServer =
