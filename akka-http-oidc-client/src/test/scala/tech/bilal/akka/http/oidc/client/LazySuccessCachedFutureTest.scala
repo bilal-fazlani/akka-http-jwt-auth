@@ -29,7 +29,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     
     val result1 = {
       given t:Timeout = Timeout(5.seconds)
-      cachedFuture.get(t).block
+      cachedFuture.future(t).block
     }
     assertEquals(result1, 1)
     assertEquals(called, 1)
@@ -51,19 +51,19 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     
     val cachedFuture = new LazySuccessCachedFuture[Int](future)
     given t:Timeout = Timeout(5.seconds)
-    val result1 = cachedFuture.get(t).block
+    val result1 = cachedFuture.future(t).block
     assertEquals(result1, 1)
     assertEquals(called, 1)
 
-    val result2 = cachedFuture.get(t).block(5.seconds)
+    val result2 = cachedFuture.future(t).block(5.seconds)
     assertEquals(result2, 1)
     assertEquals(called, 1)
 
-    val result3 = cachedFuture.get(t).block(5.seconds)
+    val result3 = cachedFuture.future(t).block(5.seconds)
     assertEquals(result3, 1)
     assertEquals(called, 1)
 
-    val result4 = cachedFuture.get(t).block(5.seconds)
+    val result4 = cachedFuture.future(t).block(5.seconds)
     assertEquals(result4, 1)
     assertEquals(called, 1)
   }
@@ -86,18 +86,18 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     val cachedFuture = new LazySuccessCachedFuture[Int](future)
     given t:Timeout = Timeout(5.seconds)
     
-    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.get(t).block)
+    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.future(t).block)
     assertEquals(called, 1)
 
-    val result2 = cachedFuture.get(t).block
+    val result2 = cachedFuture.future(t).block
     assertEquals(result2, 2)
     assertEquals(called, 2)
 
-    val result3 = cachedFuture.get(t).block
+    val result3 = cachedFuture.future(t).block
     assertEquals(result3, 2)
     assertEquals(called, 2)
 
-    val result4 = cachedFuture.get(t).block
+    val result4 = cachedFuture.future(t).block
     assertEquals(result4, 2)
     assertEquals(called, 2)
   }
@@ -119,16 +119,16 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     val cachedFuture = new LazySuccessCachedFuture[Int](future)
     given t:Timeout = Timeout(5.seconds)
 
-    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.get(t).block)
+    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.future(t).block)
     assertEquals(called, 1)
 
-    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.get(t).block)
+    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.future(t).block)
     assertEquals(called, 2)
 
-    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.get(t).block)
+    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.future(t).block)
     assertEquals(called, 3)
 
-    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.get(t).block)
+    interceptMessage[IllegalStateException]("service unavailable")(cachedFuture.future(t).block)
     assertEquals(called, 4)
   }
 
@@ -149,11 +149,11 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
     val cachedFuture = new LazySuccessCachedFuture[Int](future)
     given t:Timeout = Timeout(4.seconds)
 
-    intercept[TimeoutException](cachedFuture.get(t).block)
-    interceptMessage[ConnectException]("connection closed")(cachedFuture.get(t).block)
-    intercept[TimeoutException](cachedFuture.get(t).block)
-    interceptMessage[ConnectException]("connection closed")(cachedFuture.get(t).block)
-    intercept[TimeoutException](cachedFuture.get(t).block)
+    intercept[TimeoutException](cachedFuture.future(t).block)
+    interceptMessage[ConnectException]("connection closed")(cachedFuture.future(t).block)
+    intercept[TimeoutException](cachedFuture.future(t).block)
+    interceptMessage[ConnectException]("connection closed")(cachedFuture.future(t).block)
+    intercept[TimeoutException](cachedFuture.future(t).block)
   }
   
   private def delayedFuture[T](delay:FiniteDuration)(value: => Try[T])(using scheduler:Scheduler, ec:ExecutionContext):Future[T] = {

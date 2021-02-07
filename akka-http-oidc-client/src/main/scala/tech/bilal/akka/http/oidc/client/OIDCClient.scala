@@ -19,13 +19,9 @@ class OIDCClient(wellKnownUrl: String, httpClient: HttpClient)(
   given Scheduler = actorSystem.scheduler
   val oidcConfig = LazySuccessCachedFuture[OIDCConfig](httpClient.get[OIDCConfig](wellKnownUrl))
 
-  var calledTimes = 0
-  
   def fetchKeys(timeout: Timeout): Future[KeySet] = {
-    calledTimes +=1
-    println(s"fetchKeys called $calledTimes times")
     for {
-      config <- oidcConfig.get(timeout)
+      config <- oidcConfig.future(timeout)
       keys <- httpClient.get[KeySet](config.jwks_uri)
     } yield keys
   }

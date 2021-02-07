@@ -29,7 +29,6 @@ class JwtVerifierTest extends FunSuite with ActorSystemMixin() with KeycloakMixi
       authUrl,
       HttpClient()
     )
-    println(BearerToken.fromServer(keycloakSettings.port, "admin", "admin"))
     val authConfig = AuthConfig("master", authUrl)
     val manager =  PublicKeyManager(client, authConfig)
     val verifier =  JwtVerifier(client.oidcConfig, manager, authConfig)

@@ -39,7 +39,7 @@ class LazySuccessCachedFuture[A](f: => Future[A])(
       }
     }
   
-  def get(timeout:Timeout):Future[A] = for {
+  def future(timeout:Timeout):Future[A] = for {
     ar: ActorRef[LazySuccessCacheMessage] <- lazySuccessCachedFutureActor
     valueMaybe:Try[A] <- {
       given Timeout = timeout

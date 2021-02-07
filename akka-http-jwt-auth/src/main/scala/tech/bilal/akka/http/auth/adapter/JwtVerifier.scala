@@ -39,7 +39,7 @@ class JwtVerifier(
             s"unabled to fetch keys from auth server"
           )
       }
-      serverIssuer <- oidcConfig.get(authConfig.keyFetchTimeout).map(_.issuer)
+      serverIssuer <- oidcConfig.future(authConfig.keyFetchTimeout).map(_.issuer)
       algo: Try[Algorithm] =
         authConfig.supportedAlgorithms
           .find(_.toLowerCase == header.alg.toLowerCase)
