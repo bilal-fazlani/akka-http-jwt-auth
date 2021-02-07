@@ -144,6 +144,9 @@ class PublicKeyManager(
         Behaviors.withTimers[PublicKeyMessage] { timer =>
           timer.startTimerWithFixedDelay(RefreshKeys, authConfig.keyRefreshInterval)
           Behaviors.receiveMessage {
+            case Disconnect => 
+              //ignore
+              Behaviors.same
             case GetKey(kid, replyTo) =>
               println("Get")
               state.map.get(kid) match {

@@ -26,7 +26,10 @@ inThisBuild(
     crossPaths := true,
     Test / parallelExecution := false,
     testFrameworks += TestFramework("munit.Framework"),
-    parallelExecution in Test in ThisBuild := false
+    parallelExecution in Test in ThisBuild := false,
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings",  // New lines for each options
+    )
   )
 )
 
