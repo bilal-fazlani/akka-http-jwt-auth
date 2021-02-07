@@ -2,7 +2,7 @@ package tech.bilal.akka.http.auth.adapter
 
 import akka.http.scaladsl.server.Directives.AsyncAuthenticator
 import akka.http.scaladsl.server.directives.Credentials.Provided
-import io.bullet.borer.Decoder
+import io.circe.Decoder
 
 import scala.concurrent.Future
 

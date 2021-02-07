@@ -1,7 +1,10 @@
 inThisBuild(
   Seq(
-    scalaVersion := "2.13.3",
-    resolvers += "jitpack" at "https://jitpack.io",
+    scalaVersion := "3.0.0-M3",
+    resolvers ++= Seq(
+      "jitpack" at "https://jitpack.io",
+      Resolver.JCenterRepository
+    ),
     organization := "tech.bilal",
     homepage := Some(
       url("https://github.com/bilal-fazlani/akka-http-jwt-auth")
@@ -25,31 +28,88 @@ inThisBuild(
     )),
     crossPaths := true,
     Test / parallelExecution := false,
-    testFrameworks += new TestFramework("munit.Framework")
+    testFrameworks += TestFramework("munit.Framework"),
+    parallelExecution in Test in ThisBuild := false,
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings" // New lines for each options
+    )
   )
 )
 
 lazy val `akka-http-jwt-auth-root` = project
   .in(file("."))
   .settings(
+    skip in publish := true,
     name := "akka-http-jwt-auth-root"
   )
-  .aggregate(`akka-http-jwt-auth`, example)
+  .aggregate(
+    `akka-http-jwt-auth`,
+    `akka-http-oidc-client`,
+    `akka-http-client-circe`,
+    `test-utils`,
+    example
+  )
+
+lazy val `akka-http-oidc-client` = project
+  .in(file("./akka-http-oidc-client"))
+  .settings(
+    name := "akka-http-oidc-client",
+    libraryDependencies ++= Seq(
+      Libs.`akka-actor-typed`,
+      TestLibs.`embedded-keycloak` % Test,
+      Libs.`slf4j-simple` % Test,
+      TestLibs.munit % Test
+    )
+  )
+  .dependsOn(`akka-http-client-circe`, `test-utils` % Test)
 
 lazy val `akka-http-jwt-auth` = project
   .in(file("./akka-http-jwt-auth"))
   .settings(
     name := "akka-http-jwt-auth",
     libraryDependencies ++= Seq(
-      Libs.`akka-actor-typed`,
-      Libs.`akka-stream`,
       Libs.`akka-http`,
       Libs.`jwt-core`,
-      Libs.`borer-core`,
-      Libs.`borer-derivation`,
-      Libs.`borer-akka`,
-      TestLibs.munit % Test,
-      TestLibs.`embedded-keycloak` % Test
+      TestLibs.logback,
+      TestLibs.`embedded-keycloak` % Test,
+      Libs.`slf4j-simple` % Test,
+      TestLibs.munit % Test
+    )
+  )
+  .dependsOn(`akka-http-oidc-client`, `test-utils` % Test)
+
+lazy val `akka-http-client-circe` = project
+  .in(file("./akka-http-client-circe"))
+  .settings(
+    name := "akka-http-client-circe",
+    libraryDependencies ++= Seq(
+      Libs.`akka-http`,
+      Libs.`akka-stream`,
+      Json.`circe-core`,
+      Json.`circe-generic`,
+      Json.`circe-parser`,
+      TestLibs.logback % Test,
+      Libs.`slf4j-simple` % Test,
+      Libs.`akka-actor-typed` % Test,
+      TestLibs.munit % Test
+    )
+  )
+  .dependsOn(`test-utils` % Test)
+
+lazy val `test-utils` = project
+  .in(file("./test-utils"))
+  .settings(
+    name := "test-utils",
+    skip in publish := true,
+    libraryDependencies ++= Seq(
+      Json.`circe-core`,
+      Json.`circe-generic`,
+      Json.`circe-parser`,
+      Libs.`akka-http`,
+      Libs.`akka-testkit`,
+      Libs.`akka-actor-typed`,
+      TestLibs.`embedded-keycloak`,
+      TestLibs.munit
     )
   )
 
@@ -61,6 +121,7 @@ lazy val example = project
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`akka-actor-typed`,
+      Libs.`slf4j-simple`,
       TestLibs.`embedded-keycloak`
     )
   )

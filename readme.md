@@ -4,8 +4,9 @@
 - [x] issuer check
 - [ ] non RSA algorithms
 - [ ] file driven config
-- [ ] create test pipelines
+- [x] create test pipelines
 - [x] publish to maven
 - [ ] support and test with other auth servers
+- [ ] create documentation pipeline
 - [ ] create documentation
-- [ ] migrate to scala 3
+- [x] migrate to scala 3
