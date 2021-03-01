@@ -96,7 +96,6 @@ lazy val `test-utils` = project
       Json.`circe-parser`,
       Libs.`akka-http`,
       Libs.`akka-testkit`,
-      Libs.`akka-http-testkit`,
       Libs.`akka-actor-typed`,
       TestLibs.`embedded-keycloak`,
       TestLibs.logback,
