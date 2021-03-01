@@ -2,9 +2,21 @@ name: Build
 
 on:
   push:
-    branches: [ master, dotty ]
+    paths-ignore:
+      - 'docs/**'
+      - README.md
+      - 'mkdocs.yml'
+      - Pipfile
+      - 'netlify.toml'
+      - '.github/workflows/scala-steward.yml'
   pull_request:
-    branches: [ master, dotty ]
+    paths-ignore:
+      - 'docs/**'
+      - README.md
+      - 'mkdocs.yml'
+      - Pipfile
+      - 'netlify.toml'
+      - '.github/workflows/scala-steward.yml'
 
 jobs:
   build:
