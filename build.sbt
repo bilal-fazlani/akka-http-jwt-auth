@@ -55,10 +55,7 @@ lazy val `akka-http-oidc-client` = project
   .settings(
     name := "akka-http-oidc-client",
     libraryDependencies ++= Seq(
-      Libs.`akka-actor-typed`,
-      TestLibs.`embedded-keycloak` % Test,
-      Libs.`slf4j-simple` % Test,
-      TestLibs.munit % Test
+      Libs.`akka-actor-typed`
     )
   )
   .dependsOn(`akka-http-client-circe`, `test-utils` % Test)
@@ -69,11 +66,7 @@ lazy val `akka-http-jwt-auth` = project
     name := "akka-http-jwt-auth",
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
-      Libs.`jwt-core`,
-      TestLibs.logback,
-      TestLibs.`embedded-keycloak` % Test,
-      Libs.`slf4j-simple` % Test,
-      TestLibs.munit % Test
+      Libs.`jwt-core`
     )
   )
   .dependsOn(`akka-http-oidc-client`, `test-utils` % Test)
@@ -87,11 +80,7 @@ lazy val `akka-http-client-circe` = project
       Libs.`akka-stream`,
       Json.`circe-core`,
       Json.`circe-generic`,
-      Json.`circe-parser`,
-      TestLibs.logback % Test,
-      Libs.`slf4j-simple` % Test,
-      Libs.`akka-actor-typed` % Test,
-      TestLibs.munit % Test
+      Json.`circe-parser`
     )
   )
   .dependsOn(`test-utils` % Test)
@@ -107,8 +96,11 @@ lazy val `test-utils` = project
       Json.`circe-parser`,
       Libs.`akka-http`,
       Libs.`akka-testkit`,
+      Libs.`akka-http-testkit`,
       Libs.`akka-actor-typed`,
       TestLibs.`embedded-keycloak`,
+      TestLibs.logback,
+      Libs.`slf4j-simple`,
       TestLibs.munit
     )
   )
