@@ -31,9 +31,8 @@ inThisBuild(
     testFrameworks += TestFramework("munit.Framework"),
     parallelExecution in Test in ThisBuild := false,
     scalacOptions ++= Seq(
-      "-rewrite",
-      "-source", "future-migration",
-      // "-Xfatal-warnings" // New lines for each options
+      "-source", "future",
+      "-Xfatal-warnings"
     )
   )
 )
