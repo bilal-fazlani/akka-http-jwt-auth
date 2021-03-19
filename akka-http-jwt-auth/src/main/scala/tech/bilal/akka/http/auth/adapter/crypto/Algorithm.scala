@@ -6,7 +6,7 @@ import java.math.BigInteger
 import java.security.spec.RSAPublicKeySpec
 import java.security.{KeyFactory, PublicKey}
 import java.util.Base64
-import tech.bilal.akka.http.oidc.client.models._
+import tech.bilal.akka.http.oidc.client.models.*
 
 import scala.util.{Failure, Success, Try}
 

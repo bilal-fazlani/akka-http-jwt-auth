@@ -1,7 +1,7 @@
 package example
 
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import org.tmt.embedded_keycloak.utils.BearerToken
 
@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object Main extends App with Boilerplate {
 
-  import authDirectives._
+  import authDirectives.*
 
   val adminPolicy = policy(_.preferred_username == "admin")
 

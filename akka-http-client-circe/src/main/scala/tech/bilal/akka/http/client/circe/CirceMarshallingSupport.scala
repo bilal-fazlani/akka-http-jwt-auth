@@ -12,15 +12,15 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 trait CirceMarshallingSupport {
-  def mediaTypes: Seq[MediaType.WithFixedCharset] =
+  private val mediaTypes: Seq[MediaType.WithFixedCharset] =
     List(`application/json`)
   
-  def unmarshallerContentTypes: Seq[ContentTypeRange] =
+  private val unmarshallerContentTypes: Seq[ContentTypeRange] =
       mediaTypes.map(ContentTypeRange.apply)
   
   given unm[T:Decoder](using ExecutionContext) : FromEntityUnmarshaller[T] = {
     Unmarshaller.byteStringUnmarshaller
-      .forContentTypes(unmarshallerContentTypes: _*)
+      .forContentTypes(unmarshallerContentTypes *)
       .map{
         case ByteString.empty => throw Unmarshaller.NoContentException
         case data             => decode[T](data.utf8String).toTry.get

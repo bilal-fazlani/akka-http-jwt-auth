@@ -1,7 +1,7 @@
 package tech.bilal.akka.http.auth.adapter
 
-import akka.http.scaladsl.server.Directives.{authorize => akkaAuth, authorizeAsync => akkaAuthAsync, _}
-import akka.http.scaladsl.server._
+import akka.http.scaladsl.server.Directives.{authorize as akkaAuth, authorizeAsync as akkaAuthAsync, *}
+import akka.http.scaladsl.server.*
 import io.circe.Decoder
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.SpawnProtocol.Command

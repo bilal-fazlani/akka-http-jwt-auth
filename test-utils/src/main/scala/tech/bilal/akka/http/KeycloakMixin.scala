@@ -1,10 +1,10 @@
 package tech.bilal.akka.http
 
-import org.tmt.embedded_keycloak._
+import org.tmt.embedded_keycloak.*
 import munit.FunSuite
-import org.tmt.embedded_keycloak.KeycloakData._
+import org.tmt.embedded_keycloak.KeycloakData.*
 import org.tmt.embedded_keycloak.impl.StopHandle
-import tech.bilal.akka.http._
+import tech.bilal.akka.http.*
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 

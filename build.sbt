@@ -1,6 +1,6 @@
 inThisBuild(
   Seq(
-    scalaVersion := "3.0.0-M3",
+    scalaVersion := "3.0.0-RC1",
     resolvers ++= Seq(
       "jitpack" at "https://jitpack.io",
       Resolver.JCenterRepository
@@ -31,7 +31,9 @@ inThisBuild(
     testFrameworks += TestFramework("munit.Framework"),
     parallelExecution in Test in ThisBuild := false,
     scalacOptions ++= Seq(
-      "-Xfatal-warnings" // New lines for each options
+      "-rewrite",
+      "-source", "future-migration",
+      // "-Xfatal-warnings" // New lines for each options
     )
   )
 )

@@ -2,15 +2,15 @@ package tech.bilal.akka.http.client.circe
 
 import tech.bilal.akka.http.client.circe.HttpClient
 import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import akka.actor.typed.scaladsl._
+import akka.actor.typed.scaladsl.*
 import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpHeader, HttpResponse, ResponseEntity}
 import akka.http.scaladsl.model.headers.`Content-Type`
 import io.circe.Decoder
-import tech.bilal.akka.http._
+import tech.bilal.akka.http.*
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
-import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 
 class HttpClientTest extends munit.FunSuite with ActorSystemMixin() {

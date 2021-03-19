@@ -4,7 +4,7 @@ import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import io.circe.Decoder
 import munit.FunSuite
 import org.tmt.embedded_keycloak.utils.BearerToken
-import tech.bilal.akka.http._
+import tech.bilal.akka.http.*
 import tech.bilal.akka.http.auth.adapter.{AuthConfig, JwtVerifier}
 import tech.bilal.akka.http.oidc.client.OIDCClient
 import tech.bilal.akka.http.client.circe.HttpClient

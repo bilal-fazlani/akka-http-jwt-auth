@@ -1,7 +1,7 @@
 package tech.bilal.akka.http.auth.adapter
 
 import akka.actor.typed.SpawnProtocol.{Command, Spawn}
-import akka.actor.typed._
+import akka.actor.typed.*
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.scaladsl.Behaviors
 import akka.pattern.AskSupport

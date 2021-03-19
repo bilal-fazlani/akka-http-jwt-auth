@@ -8,7 +8,7 @@ import tech.bilal.akka.http.client.circe.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.ExecutionContext
-import tech.bilal.akka.http.oidc.client.models._
+import tech.bilal.akka.http.oidc.client.models.*
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt

@@ -2,7 +2,7 @@ package tech.bilal.akka.http
 
 import akka.actor.typed.{ActorRef, ActorSystem, SpawnProtocol}
 import munit.FunSuite
-import akka.actor.testkit.typed.scaladsl._
+import akka.actor.testkit.typed.scaladsl.*
 import akka.actor.typed.SpawnProtocol.Command
 
 trait ActorTestKitMixin extends FunSuite {

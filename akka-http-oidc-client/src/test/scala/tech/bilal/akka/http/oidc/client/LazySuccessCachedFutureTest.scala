@@ -6,7 +6,7 @@ import akka.actor.typed.SpawnProtocol.Command
 import akka.actor.typed.{ActorRef, ActorSystem, Scheduler, SpawnProtocol}
 import akka.util.Timeout
 import tech.bilal.akka.http.ActorTestKitMixin
-import tech.bilal.akka.http._
+import tech.bilal.akka.http.*
 
 import java.net.ConnectException
 import scala.concurrent.{ExecutionContext, Future, Promise, TimeoutException}
@@ -15,7 +15,7 @@ import scala.util.{Failure, Success, Try}
 
 class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin {
   test("get should a future when get") {
-    given ActorSystem[_] = actorTestKit.internalSystem
+    given ActorSystem[?] = actorTestKit.internalSystem
     
     given Scheduler = actorTestKit.internalSystem.scheduler
     given ExecutionContext = actorTestKit.internalSystem.executionContext
@@ -36,7 +36,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
   }
 
   test("get should a same future when get call multiple times") {
-    given ActorSystem[_] = actorTestKit.internalSystem
+    given ActorSystem[?] = actorTestKit.internalSystem
 
     given Scheduler = actorTestKit.internalSystem.scheduler
     given ExecutionContext = actorTestKit.internalSystem.executionContext
@@ -69,7 +69,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
   }
 
   test("get should retry a failed future") {
-    given ActorSystem[_] = actorTestKit.internalSystem
+    given ActorSystem[?] = actorTestKit.internalSystem
 
     given Scheduler = actorTestKit.internalSystem.scheduler
     given ExecutionContext = actorTestKit.internalSystem.executionContext
@@ -103,7 +103,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
   }
 
   test("when a future keeps failing before timeout") {
-    given ActorSystem[_] = actorTestKit.internalSystem
+    given ActorSystem[?] = actorTestKit.internalSystem
 
     given Scheduler = actorTestKit.internalSystem.scheduler
     given ExecutionContext = actorTestKit.internalSystem.executionContext
@@ -133,7 +133,7 @@ class LazySuccessCachedFutureTest extends munit.FunSuite with ActorTestKitMixin 
   }
 
   test("when a failing future takes more time than timeout") {
-    given ActorSystem[_] = actorTestKit.internalSystem
+    given ActorSystem[?] = actorTestKit.internalSystem
 
     given Scheduler = actorTestKit.internalSystem.scheduler
     given ExecutionContext = actorTestKit.internalSystem.executionContext
