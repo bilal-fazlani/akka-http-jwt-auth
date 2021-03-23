@@ -26,7 +26,7 @@ object Libs {
   lazy val `akka-stream` = ("com.typesafe.akka" %% "akka-stream" % AkkaVersion)
     .cross(CrossVersion.for3Use2_13)
   lazy val `jwt-core` =
-    ("com.github.jwt-scala" %% "jwt-core" % "7.1.1").cross(CrossVersion.for3Use2_13)
+    ("com.github.jwt-scala" %% "jwt-core" % "7.1.2").cross(CrossVersion.for3Use2_13)
 }
 
 object TestLibs {
