@@ -24,21 +24,6 @@ class LazySuccessCachedFuture[A](f: => Future[A])(
   scheduler:Scheduler,
   ec:ExecutionContext
 ) {
-  private val log = false
-  var firstTimeStamp:Option[LocalDateTime] = None
-  
-  @tailrec
-  private def println(str:String):Unit = if (log) {
-      firstTimeStamp match {
-        case None =>
-          firstTimeStamp = Some(LocalDateTime.now())
-          println(str)
-        case Some(stamp) =>
-          val duration = FiniteDuration.apply(ChronoUnit.SECONDS.between(stamp, LocalDateTime.now()), TimeUnit.SECONDS)
-          scala.Console.println(s"$duration $str")
-      }
-    }
-  
   def future(timeout:Timeout):Future[A] = for {
     ar: ActorRef[LazySuccessCacheMessage] <- lazySuccessCachedFutureActor
     valueMaybe:Try[A] <- {
@@ -64,51 +49,40 @@ class LazySuccessCachedFuture[A](f: => Future[A])(
   private case object Fetch extends LazySuccessCacheMessage
 
   private def empty: Behavior[LazySuccessCacheMessage] = {
-    println("----> empty")
     Behaviors.setup { ctx =>
       Behaviors.receiveMessagePartial {
         case Get(replyTo) =>
-          println("Get")
           ctx.self ! Fetch
           loading(Seq(replyTo))
-        case x =>
-          println(s"unexpected $x")
+        case _ =>
           Behaviors.same
       }
     }
   }
 
   private def loading(listeners: Seq[ActorRef[Try[A]]], print:Boolean = true): Behavior[LazySuccessCacheMessage] =
-    if print then println("----> loading")
     Behaviors.setup { ctx =>
       Behaviors.receiveMessagePartial {
         case Fetch =>
-          println("Fetch")
           ctx.pipeToSelf(f)(Set.apply)
           Behaviors.same
         case Get(replyTo) =>
-          println("Get")
           loading(listeners.appended(replyTo), false)
         case Set(Success(value)) =>
-          println("Set success")
           listeners.foreach(_ ! Success(value))
           full(value)
         case Set(Failure(err)) =>
-          println("Set failed")
           listeners.foreach(_ ! Failure(err))
           empty
       }
     }
 
   private def full(state: A): Behavior[LazySuccessCacheMessage] =
-    println("----> full")
     Behaviors.receiveMessagePartial {
       case Get(replyTo) =>
-        println("Get")
         replyTo ! Success(state)
         Behaviors.same
-      case x =>
-        println(s"unexpected $x")
+      case _ =>
         Behaviors.same
     }
 }

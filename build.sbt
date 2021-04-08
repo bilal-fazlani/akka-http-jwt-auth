@@ -1,6 +1,6 @@
 inThisBuild(
   Seq(
-    scalaVersion := "3.0.0-RC1",
+    scalaVersion := "3.0.0-RC2",
     resolvers ++= Seq(
       "jitpack" at "https://jitpack.io",
       Resolver.JCenterRepository
@@ -29,9 +29,9 @@ inThisBuild(
     crossPaths := true,
     Test / parallelExecution := false,
     testFrameworks += TestFramework("munit.Framework"),
-    parallelExecution in Test in ThisBuild := false,
     scalacOptions ++= Seq(
-      "-source", "future",
+      "-source",
+      "future",
       "-Xfatal-warnings"
     )
   )
@@ -40,7 +40,7 @@ inThisBuild(
 lazy val `akka-http-jwt-auth-root` = project
   .in(file("."))
   .settings(
-    skip in publish := true,
+    publish / skip := true,
     name := "akka-http-jwt-auth-root"
   )
   .aggregate(
@@ -90,7 +90,7 @@ lazy val `test-utils` = project
   .in(file("./test-utils"))
   .settings(
     name := "test-utils",
-    skip in publish := true,
+    publish / skip := true,
     libraryDependencies ++= Seq(
       Json.`circe-core`,
       Json.`circe-generic`,
@@ -109,7 +109,7 @@ lazy val example = project
   .in(file("./example"))
   .settings(
     name := "example",
-    skip in publish := true,
+    publish / skip := true,
     libraryDependencies ++= Seq(
       Libs.`akka-http`,
       Libs.`akka-actor-typed`,

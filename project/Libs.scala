@@ -1,7 +1,7 @@
 import sbt._
 
 object Json {
-  private val circeVersion = "0.14.0-M4"
+  private val circeVersion = "0.14.0-M5"
 
   lazy val `circe-core` = "io.circe" %% "circe-core" % circeVersion
   lazy val `circe-generic` = "io.circe" %% "circe-generic" % circeVersion
@@ -25,8 +25,7 @@ object Libs {
     )
   lazy val `akka-stream` = ("com.typesafe.akka" %% "akka-stream" % AkkaVersion)
     .cross(CrossVersion.for3Use2_13)
-  lazy val `jwt-core` =
-    ("com.github.jwt-scala" %% "jwt-core" % "7.1.1").cross(CrossVersion.for3Use2_13)
+  lazy val `jwt-core` = "com.github.jwt-scala" %% "jwt-core" % "7.1.3"
 }
 
 object TestLibs {
