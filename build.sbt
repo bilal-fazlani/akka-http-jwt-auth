@@ -1,11 +1,10 @@
 inThisBuild(
   Seq(
-    scalaVersion := "3.0.0-RC2",
+    scalaVersion := "3.0.0",
     resolvers ++= Seq(
-      "jitpack" at "https://jitpack.io",
-      Resolver.JCenterRepository
+      "jitpack" at "https://jitpack.io"
     ),
-    organization := "tech.bilal",
+    organization := "com.bilal-fazlani",
     homepage := Some(
       url("https://github.com/bilal-fazlani/akka-http-jwt-auth")
     ),
