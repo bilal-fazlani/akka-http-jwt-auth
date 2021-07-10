@@ -7,7 +7,7 @@ import akka.actor.typed.SpawnProtocol.Command
 
 trait ActorTestKitMixin extends FunSuite {
   var actorTestKit: ActorTestKit = null
-  
+
   override def beforeAll() = {
     super.beforeAll()
     actorTestKit = ActorTestKit()
