@@ -39,7 +39,9 @@ class JwtVerifier(
             s"unabled to fetch keys from auth server"
           )
       }
-      serverIssuer <- oidcConfig.future(authConfig.keyFetchTimeout).map(_.issuer)
+      serverIssuer <- oidcConfig
+        .future(authConfig.keyFetchTimeout)
+        .map(_.issuer)
       algo: Try[Algorithm] =
         authConfig.supportedAlgorithms
           .find(_.toLowerCase == header.alg.toLowerCase)
@@ -73,11 +75,10 @@ class JwtVerifier(
         header,
         JwtOptions(signature = false, expiration = false, notBefore = false)
       )
-      .flatMap {
-        case (decodedHeader, contents, _) =>
-          decode[JWTHeader](decodedHeader)
-            .map((_, contents))
-            .toTry
+      .flatMap { case (decodedHeader, contents, _) =>
+        decode[JWTHeader](decodedHeader)
+          .map((_, contents))
+          .toTry
       }
   }
 }

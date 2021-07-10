@@ -10,7 +10,10 @@ import tech.bilal.akka.http.client.circe.HttpClient
 
 import scala.concurrent.duration.DurationInt
 
-class OIDCClientTest extends FunSuite with ActorSystemMixin() with KeycloakMixin() {
+class OIDCClientTest
+    extends FunSuite
+    with ActorSystemMixin()
+    with KeycloakMixin() {
   test("can fetch oidc config") {
     implicit val system: ActorSystem[SpawnProtocol.Command] = actorSystem
 
