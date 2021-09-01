@@ -10,7 +10,7 @@ object Json {
 
 object Libs {
   private val AkkaVersion = "2.6.15"
-  private val AkkaHttpVersion = "10.2.4"
+  private val AkkaHttpVersion = "10.2.6"
 
   lazy val `slf4j-simple` = "org.slf4j" % "slf4j-simple" % "2.0.0-alpha2"
   lazy val `akka-http` = ("com.typesafe.akka" %% "akka-http" % AkkaHttpVersion)
