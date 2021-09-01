@@ -33,5 +33,5 @@ object TestLibs {
     ("com.github.tmtsoftware.embedded-keycloak" %% "embedded-keycloak" % "7fd5623")
       .cross(CrossVersion.for3Use2_13)
   lazy val munit = "org.scalameta" %% "munit" % "0.7.27"
-  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.4"
 }
