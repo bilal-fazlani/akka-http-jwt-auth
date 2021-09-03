@@ -9,7 +9,7 @@ object Json {
 }
 
 object Libs {
-  private val AkkaVersion = "2.6.15"
+  private val AkkaVersion = "2.6.16"
   private val AkkaHttpVersion = "10.2.6"
 
   lazy val `slf4j-simple` = "org.slf4j" % "slf4j-simple" % "2.0.0-alpha2"
@@ -25,13 +25,13 @@ object Libs {
     )
   lazy val `akka-stream` = ("com.typesafe.akka" %% "akka-stream" % AkkaVersion)
     .cross(CrossVersion.for3Use2_13)
-  lazy val `jwt-core` = "com.github.jwt-scala" %% "jwt-core" % "8.0.2"
+  lazy val `jwt-core` = "com.github.jwt-scala" %% "jwt-core" % "8.0.3"
 }
 
 object TestLibs {
   lazy val `embedded-keycloak` =
     ("com.github.tmtsoftware.embedded-keycloak" %% "embedded-keycloak" % "7fd5623")
       .cross(CrossVersion.for3Use2_13)
-  lazy val munit = "org.scalameta" %% "munit" % "0.7.27"
-  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  lazy val munit = "org.scalameta" %% "munit" % "0.7.29"
+  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.4"
 }
