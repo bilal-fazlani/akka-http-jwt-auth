@@ -1,6 +1,6 @@
 inThisBuild(
   Seq(
-    scalaVersion := "3.0.1",
+    scalaVersion := "3.0.2",
     resolvers ++= Seq(
       "jitpack" at "https://jitpack.io"
     ),
